@@ -2,15 +2,15 @@ import os, sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage
-from utils.config import APIKEY_J
 
 
 #  1. Set env var OPENAI_API_KEY
-load_dotenv()
-os.environ["OPENAI_API_KEY"] = APIKEY_J
+import dotenv
+
+dotenv.load_dotenv()
 
 
 chat = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0.2)
