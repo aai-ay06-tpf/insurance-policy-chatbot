@@ -1,6 +1,6 @@
 import os, re
 from pypdf import PdfReader
-from config import DOWNLOAD_PATH
+from utils.config import DOWNLOAD_PATH
 
 ##TODO: remove from here
 pdf_files = [os.path.join(DOWNLOAD_PATH, file) for file in os.listdir(DOWNLOAD_PATH) if file.endswith('.pdf')]

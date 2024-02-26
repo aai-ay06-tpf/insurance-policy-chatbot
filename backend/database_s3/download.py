@@ -1,7 +1,7 @@
 import pickle
 import os
 import boto3
-from config import DOWNLOAD_PATH, ACCESS_KEY, SECRET_KEY, BUCKET_NAME, prefix
+from utils.config import DOWNLOAD_PATH, ACCESS_KEY, SECRET_KEY, BUCKET_NAME, prefix
 
 
 def download_data():
@@ -23,3 +23,6 @@ def download_data():
 # Check if there are existing files in the DOWNLOAD_PATH
 if not os.listdir(DOWNLOAD_PATH):
     download_data()
+
+else:
+    print("Already downloaded.")
