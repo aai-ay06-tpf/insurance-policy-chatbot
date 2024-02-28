@@ -1,8 +1,8 @@
 import os
 from langchain.document_loaders.pdf import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.vectorstores import Chroma
-from langchain.embeddings import GPT4AllEmbeddings
+from langchain_community.vectorstores.chroma import Chroma
+from langchain_community.embeddings.gpt4all import GPT4AllEmbeddings
 
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
