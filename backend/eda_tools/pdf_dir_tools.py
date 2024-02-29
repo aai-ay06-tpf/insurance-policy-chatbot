@@ -1,9 +1,6 @@
 import os, re
 from pypdf import PdfReader
-from utils.config import DOWNLOAD_PATH
 
-##TODO: remove from here
-pdf_files = [os.path.join(DOWNLOAD_PATH, file) for file in os.listdir(DOWNLOAD_PATH) if file.endswith('.pdf')]
 
 
 def extract_text(pdf_files: list) -> dict:
@@ -115,8 +112,3 @@ def extract_images(pdf_files: list) -> dict:
         extractions_dict[os.path.basename(pdf_file)] = images
     
     return extractions_dict
-
-
-if __name__ == "__main__":
-
-    extract_text([pdf_files[0]])
