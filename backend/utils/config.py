@@ -2,10 +2,9 @@ import os
 
 
 # Get the current file path
-BASE_PATH = os.path.dirname(os.path.abspath(__file__))
-
+BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Configure the download path
-DOWNLOAD_PATH = os.path.join(BASE_PATH, 'queplan_insurance')
+DOWNLOAD_PATH = os.path.join(BASE_PATH, 'database_s3', 'queplan_insurance')
 os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
 # Configure the AWS credentials
