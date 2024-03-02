@@ -5,3 +5,4 @@ langchain
 langchain-openai
 chromadb
 python-dotenv
+rank_bm25
