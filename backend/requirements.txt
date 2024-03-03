@@ -1,8 +1,11 @@
 boto3
 pypdf
-PyPDF2
+#PyPDF2
 langchain
 langchain-openai
-chromadb
+#chromadb
 python-dotenv
-rank_bm25
+#rank_bm25
+qdrant-client
+gpt4all
+cohere
