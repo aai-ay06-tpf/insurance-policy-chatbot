@@ -26,7 +26,7 @@ async def init():
     #TODO: 
     #TODO: 
     #TODO: CONECTAR CON EL SERVICIO DE QDRANT
-    #TODO: 
+    #TODO: https://python-client.qdrant.tech/quickstart
     #TODO: 
     with open(RETRIEVERS_PATH, 'rb') as f:
         pdf_dict = pickle.load(f)
