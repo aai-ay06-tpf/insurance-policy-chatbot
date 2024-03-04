@@ -19,9 +19,10 @@ def download_data():
             print(f"Download {key} as {file_name}")
 
 
-# Check if there are existing files in the DOWNLOAD_PATH
-if not os.listdir(DOWNLOAD_PATH):
-    download_data()
+if __name__ == "__main__":
+    # Check if there are existing files in the DOWNLOAD_PATH
+    if not os.listdir(DOWNLOAD_PATH):
+        download_data()
 
-else:
-    print("Already downloaded.")
+    else:
+        print("Already downloaded.")

@@ -13,12 +13,14 @@ from langchain_community.embeddings.huggingface import (
 
 load_dotenv()
 
-
+# new model: https://platform.openai.com/docs/guides/embeddings/
+# text-embedding-3-small and text-embedding-3-large,
 class EmbeddingsLabels(Enum):
     ADA = "ada_embeddings"
     GPT4ALL = "gpt4all_embeddings"
     SBERT = "sbert_embeddings"
     COHERE = "cohere_embeddings"
+    OPENAI = "openai_embeddings"
 
 
 class EmbeddingsModels(Enum):
@@ -26,6 +28,7 @@ class EmbeddingsModels(Enum):
     GPT4ALL = ""
     SBERT = "sentence-transformers/all-MiniLM-L6-v2"
     COHERE = "Cohere/Cohere-embed-multilingual-light-v3.0"
+    OPENAI = "text-embedding-3-large"
 
 
 class Embeddings():
@@ -58,6 +61,8 @@ class Embeddings():
             return self.sbert_embeddings()
         elif self._current == EmbeddingsLabels.COHERE.value:
             return self.cohere_embeddings()
+        elif self._current == EmbeddingsLabels.OPENAI.value:
+            return self.openai_embeddings()
         else:
             raise ValueError(
                 f"Invalid embeddings label: {emb_label}, use `set_current`")
@@ -81,4 +86,10 @@ class Embeddings():
         return CohereEmbeddings(
             model=EmbeddingsModels.COHERE.value,
             cohere_api_key=os.getenv("COHERE_API_KEY")
+        )
+        
+    def openai_embeddings(self):
+        return OpenAIEmbeddings(
+            model=EmbeddingsModels.OPENAI.value,
+            api_key=os.getenv("OPENAI_API_KEY")
         )

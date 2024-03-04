@@ -23,10 +23,10 @@ async def init():
     await msg.send()
     
     
-    #TODO: 
-    #TODO: 
-    #TODO: CONECTAR CON EL SERVICIO DE QDRANT
+    #TODO: CONECTAR CON EL SERVICIO DE QDRANT:
     #TODO: https://python-client.qdrant.tech/quickstart
+    #TODO: CREAR LOTR:
+    #TODO: https://python.langchain.com/docs/integrations/retrievers/merger_retriever
     #TODO: 
     with open(RETRIEVERS_PATH, 'rb') as f:
         pdf_dict = pickle.load(f)
