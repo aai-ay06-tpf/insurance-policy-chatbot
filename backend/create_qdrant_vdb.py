@@ -20,12 +20,15 @@ def create_vector_db():
         chunk_overlap=100,
     )
     texts = text_splitter.split_documents(documents)
+    metadatas = [{"source": f"{i}-lt"} for i in range(len(texts))]
     
-    vectorstore = Qdrant.from_documents(
+    
+    # Create the local vector database
+    Qdrant.from_documents(
         documents = texts,
         embedding=Embeddings().obtain_embeddings(),
-        path=QVDB_BASE_PATH.format(embeddings=Embeddings().get_current(), filename="all_files"),
-        collection_name="all_documents"
+        path=QVDB_BASE_PATH.format(filename="all_files"),
+        collection_name=Embeddings().get_current()
     )
     
 

@@ -1,2 +1,3 @@
 vdb_qdrant/*
-*_borrar.py
+*_borrar*
+.summarization_backup/*
