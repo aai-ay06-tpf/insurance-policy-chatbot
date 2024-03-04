@@ -18,6 +18,6 @@ prefix = "queplan_insurance/"
 
 
 # Qdrant Vector Database Base Path 
-QVDB_BASE_PATH = os.path.join(SERVICE_PATH, "vdb_qdrant", "{embeddings}_{filename}")
+QVDB_BASE_PATH = os.path.join(SERVICE_PATH, "vdb_qdrant", "{filename}")
 os.makedirs(os.path.split(QVDB_BASE_PATH)[0], exist_ok=True)
 
