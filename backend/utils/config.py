@@ -1,10 +1,12 @@
 import os
 
+SERVICE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+SERVICE_NAME = os.path.basename(SERVICE_PATH)
+SERVICE_2_NAME = "frontend"
+SERVICE_2_PATH = os.path.join(os.path.dirname(SERVICE_PATH), SERVICE_2_NAME)
 
-# Get the current file path
-BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Configure the download path
-DOWNLOAD_PATH = os.path.join(BASE_PATH, 'database_s3', 'queplan_insurance')
+# Configure the PDF download path
+DOWNLOAD_PATH = os.path.join(SERVICE_PATH, 'database_s3', 'queplan_insurance')
 os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
 # Configure the AWS credentials
@@ -15,4 +17,7 @@ BUCKET_NAME = "anyoneai-datasets"
 prefix = "queplan_insurance/"
 
 
+# Qdrant Vector Database Base Path 
+QVDB_BASE_PATH = os.path.join(SERVICE_PATH, "vdb_qdrant", "{embeddings}_{filename}")
+os.makedirs(os.path.split(QVDB_BASE_PATH)[0], exist_ok=True)
 
