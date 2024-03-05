@@ -52,9 +52,12 @@ def extract_patterns_per_page(file_path: str, pattern: str, extend: bool = True)
                 if extend:
                     for i in range(1, 5):
                         try:
+                            if re.search(pattern, page[ix+i]):
+                                break
                             if page[ix+i].strip() != '':
                                 matches.append(page[ix+i])
-                        except:
+                        except IndexError:
+                        
                             break
         # result.append(" ".join(matches)) # es mas procesable
         result.append(matches)# es mas comprensible
