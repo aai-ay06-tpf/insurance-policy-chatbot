@@ -4,7 +4,7 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
 from langchain.document_loaders.pdf import PyPDFDirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-
+# https://python.langchain.com/docs/integrations/vectorstores/qdrant#on-disk-storage
 
 from ml_service.embeddings import Embeddings
 from utils.config import DOWNLOAD_PATH, QVDB_BASE_PATH
