@@ -6,8 +6,6 @@ from langchain_core.runnables.passthrough import RunnablePassthrough
 from langchain_core.prompts import PromptTemplate
 from langchain_community.llms.cohere import Cohere
 
-from ml_service.retrievers import obtain_retrievers
-
 
 load_dotenv()
 
