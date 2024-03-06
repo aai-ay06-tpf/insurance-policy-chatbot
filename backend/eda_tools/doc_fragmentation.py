@@ -24,7 +24,7 @@ def extract_documents_from_text(file, articles):
         if i == len(articles) - 1:
             documents.append(
                 Document(
-                    page_content=text[text.find(articles[i]):],
+                    page_content=text[text.find(articles[i]):].replace("\n", " "),
                     metadata=metadata
                 )
             )
@@ -33,7 +33,7 @@ def extract_documents_from_text(file, articles):
         start_index, end_index = text.find(articles[i]), text.find(articles[i+1])
         documents.append(
             Document(
-                page_content=text[start_index:end_index],
+                page_content=text[start_index:end_index].replace("\n", " "),
                 metadata=metadata
             )
         )
