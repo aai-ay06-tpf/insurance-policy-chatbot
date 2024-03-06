@@ -3,30 +3,6 @@ from itertools import chain
 from pypdf import PdfReader
 from langchain_community.document_loaders.pdf import PyPDFLoader
 
-def extract_uppercase_lines(file_path: str) -> dict:
-    # PDF files data extraction
-    reader = PdfReader(file_path)
-    result = []
-    for page in reader.pages:
-        text = page.extract_text()
-
-        # Obtain the uppercase lines in the text
-        uppercase_lines = [line.strip() for line in text.split("\n") if line.isupper()]
-        result.append(uppercase_lines)
-
-        
-    return result
-
-
-# def extract_patterns(file_path: str, pattern: str, normalize: bool=False) -> list:
-#     reader = PdfReader(file_path)
-#     text = ''.join([page.extract_text() for page in reader.pages])
-#     if normalize:
-#         return re.findall(r''+pattern, text, flags=re.IGNORECASE)
-#     else:
-#         return re.findall(r''+pattern, text)
-
-
 
 
 
