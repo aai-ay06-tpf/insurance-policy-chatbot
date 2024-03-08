@@ -6,13 +6,16 @@ from langchain_community.document_loaders.pdf import PyPDFLoader
 
 
 
-def extract_patterns(file_path: str, pattern: str, normalize: bool = False) -> list:
+def extract_patterns(file_path: str, pattern: str, normalize: bool = True) -> list:
     reader = PdfReader(file_path)
-    text = ''.join(chain.from_iterable(page.extract_text() for page in reader.pages))
+    # text = ''.join(chain.from_iterable(page.extract_text() for page in reader.pages))
+    text = ''.join('\n'.join(page.extract_text() for page in reader.pages))
     lines = text.split('\n')
     flags = re.IGNORECASE if normalize else 0
     matches = [line for line in lines if re.search(pattern, line, flags=flags)]
     return matches
+
+
 
 
 def extract_patterns_per_page(file_path: str, pattern: str, extend: bool = True) -> list:
