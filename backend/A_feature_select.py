@@ -4,7 +4,8 @@ from typing import Callable
 from langchain_core.documents.base import Document
 from eda_tools.pdf_file_tools import (
     extract_patterns, extract_text,
-    remove_pattern_from_lines
+    remove_pattern_from_lines,
+    obtain_header_paragraphs
 )
 from utils.config import DOWNLOAD_PATH, FEATURES_PATH
 
@@ -54,7 +55,7 @@ def create_file_batch(files:list, func: Callable, *args: tuple) -> list:
 
 
 
-def create_doc_batch(batch_files: list) -> list:
+def create_feature_file(batch_files: list) -> list:
     """
     Create list of langchain Documents in which each document is a representation of all the articles in the policy
     with the corresponding preprocessing and metadata.
@@ -63,7 +64,7 @@ def create_doc_batch(batch_files: list) -> list:
     - batch_files (list): A list of tuples containing the file path and the pattern to be used to extract the articles.
     
     Returns:
-    List: A list of langchain Documents.
+    List[Document]: A list of langchain Documents.
     """
     
     filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
@@ -90,29 +91,58 @@ def create_doc_batch(batch_files: list) -> list:
     return [Document(page_content=feature, metadata={"file": filenames[i]}) for i, feature in enumerate(features)]
     
     
+def create_feature_article(batch_files: list) -> list:
+    """
+    
+    TODO: REVIEW THIS DOCS
+    
+    Create list of langchain Documents in which each document is a representation of all the articles in the policy
+    with the corresponding preprocessing and metadata.
+    
+    Parameters:
+    - batch_files (list): A list of tuples containing the file path and the pattern to be used to extract the articles.
+    
+    Returns:
+    List[ List[Document] ]: A list of lists of langchain Documents.
+    """
+    
+    filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
+    
+    extractions = [extract_patterns(file, pattern) for file, pattern in batch_files]
+    
+    splitted_text = [extract_text(file).splitlines() for file, _ in batch_files]
+    
+    contents = [obtain_header_paragraphs(text, extraction) for text, extraction in zip(splitted_text, extractions)]
+    
+    features = []
+    for i, content_list in enumerate(contents):
+        batch = []
+        for j, content in enumerate(content_list):
+            batch.append(Document(page_content=content, metadata={"file": filenames[i], "article": extractions[i][j]}))
+        features.append(batch)
+        
+    return features
 
 
 if __name__ == "__main__":
     
-    feature_name = "feature_files"
-    
     pdf_files = os.listdir(DOWNLOAD_PATH)
-    patterns = ["^ART.CULO\s\d+.:?", "^Art.culo\s\d+.:?"]
+    patterns = ["^ART.CULO\s\d+.:?"]
     
     file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
     
-    # First Feature: Extracting the articles and header from the policies
-    feature_files = create_doc_batch(file_batch)
+    # First Feature: Extracting the article titles and policy header
+    feature_files = create_feature_file(file_batch)
     
-    with open(os.path.join(FEATURES_PATH, f"{feature_name}.pkl"), "wb") as f:
+    # Second Feature: Extracting the article headers from policies
+    feature_articles = create_feature_article(file_batch)
+    
+    
+    with open(os.path.join(FEATURES_PATH, f"feature_files.pkl"), "wb") as f:
         pickle.dump(feature_files, f)
     
-    # TODO: remove from here, this is for other feature
-    # # First Staging: obtaining the documents of each article for each policy
-    # from eda_tools.doc_fragmentation import extract_documents_from_text
-    # articles = [(selected_file, extract_patterns(selected_file, pattern)) for selected_file, pattern in file_batch]
-    # documents_by_file = [extract_documents_from_text(selected_file, article) for selected_file, article in articles]
-    
+    with open(os.path.join(FEATURES_PATH, f"feature_articles.pkl"), "wb") as f:
+        pickle.dump(feature_articles, f)
     
     end = time.time()
 
