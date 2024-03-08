@@ -1,23 +1,32 @@
 import os
+from configparser import ConfigParser
 
+
+def read_config(parser: ConfigParser, location: str) -> None:
+    assert parser.read(location), f"Could not read config {location}"
+
+
+env_config = ConfigParser()
+CONFIG_FILE = os.path.join(os.getcwd(), '.env')
+read_config(env_config, CONFIG_FILE)
+
+# Main directory paths
+ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SERVICE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVICE_NAME = os.path.basename(SERVICE_PATH)
-SERVICE_2_NAME = "frontend"
-SERVICE_2_PATH = os.path.join(os.path.dirname(SERVICE_PATH), SERVICE_2_NAME)
 
-# Configure the PDF download path
+# AWS S3 Configuration
+ACCESS_KEY = env_config.get('aws-s3', 'ACCESS_KEY')
+SECRET_KEY = env_config.get('aws-s3', 'SECRET_KEY')
+DATASET_PATH = env_config.get('aws-s3', 'DATASET_PATH')
+BUCKET_NAME = env_config.get('aws-s3', 'BUCKET_NAME')
+prefix = env_config.get('aws-s3', 'prefix')
+
+# AWS S3 PDF download path
 DOWNLOAD_PATH = os.path.join(SERVICE_PATH, 'database_s3', 'queplan_insurance')
 os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
-# Configure the AWS credentials
-ACCESS_KEY = 'AKIA2JHUK4EGBAMYAYFY'
-SECRET_KEY = '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'
-DATASET_PATH = 's3://anyoneai-datasets/queplan_insurance/'
-BUCKET_NAME = "anyoneai-datasets"
-prefix = "queplan_insurance/"
-
-
-# Qdrant Vector Database Base Path 
-QVDB_BASE_PATH = os.path.join(SERVICE_PATH, "vdb_qdrant", "{filename}")
-os.makedirs(os.path.split(QVDB_BASE_PATH)[0], exist_ok=True)
+# Qdrant Vector Database Path 
+QVDB_BASE_PATH = os.path.join(ROOT_PATH, "vdb_qdrant", "{db_name}")
+QDRANT_URL = env_config.get('qdrant', 'QDRANT_URL')
 

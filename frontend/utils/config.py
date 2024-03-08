@@ -1,10 +1,20 @@
 import os
+from configparser import ConfigParser
 
+
+def read_config(parser: ConfigParser, location: str) -> None:
+    assert parser.read(location), f"Could not read config {location}"
+
+
+env_config = ConfigParser()
+CONFIG_FILE = os.path.join(os.getcwd(), '.env')
+read_config(env_config, CONFIG_FILE)
+
+ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SERVICE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SERVICE_NAME = os.path.basename(SERVICE_PATH)
-SERVICE_1_NAME = "backend"
-SERVICE_1_PATH = os.path.join(os.path.dirname(SERVICE_PATH), SERVICE_1_NAME)
-VDB_PATH = os.path.join(SERVICE_1_PATH, "vdb_qdrant")
-QVDB_BASE_PATH = os.path.join(SERVICE_PATH, VDB_PATH, "{filename}")
+
+QDRANT_URL = env_config.get('qdrant', 'QDRANT_URL')
+
 
 
