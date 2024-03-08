@@ -28,5 +28,5 @@ os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
 # Qdrant Vector Database Path 
 QVDB_BASE_PATH = os.path.join(ROOT_PATH, "vdb_qdrant", "{db_name}")
-
+QDRANT_URL = env_config.get('qdrant', 'QDRANT_URL')
 
