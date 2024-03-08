@@ -1,3 +1,4 @@
 vdb_qdrant/*
 *_borrar*
 .summarization_backup/*
+.serialized_features/*
