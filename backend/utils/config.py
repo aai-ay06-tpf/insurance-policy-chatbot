@@ -26,7 +26,11 @@ prefix = env_config.get('aws-s3', 'prefix')
 DOWNLOAD_PATH = os.path.join(SERVICE_PATH, 'database_s3', 'queplan_insurance')
 os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 
+# Pickle serialized features path
+FEATURES_PATH = os.path.join(SERVICE_PATH, '.serialized_features')
+os.makedirs(FEATURES_PATH, exist_ok=True)
+
 # Qdrant Vector Database Path 
-QVDB_BASE_PATH = os.path.join(ROOT_PATH, "vdb_qdrant", "{db_name}")
 QDRANT_URL = env_config.get('qdrant', 'QDRANT_URL')
+QDRANT_LOCAL_PATH = os.path.join(ROOT_PATH, "qdrant_collections")
 
