@@ -41,15 +41,15 @@ def extract_patterns(file_path: str, pattern: str, normalize: bool = False) -> l
     return matches
 
 
-
-def ignore_patterns(file_path: str, pattern: str) -> list:
-    reader = PdfReader(file_path)
-    text = ''.join(chain.from_iterable(page.extract_text() for page in reader.pages))
-    lines = text.split('\n')
-    matches = [line for line in lines if not re.search(pattern, line)]
-    return matches
-
-
+# TODO: REMOVER LAS FUNCIONES QUE NO SE IMPLEMENTAN (CREAR cementerio: cra.py)
+# def ignore_patterns(file_path: str, pattern: str) -> list:
+#     reader = PdfReader(file_path)
+#     text = ''.join(chain.from_iterable(page.extract_text() for page in reader.pages))
+#     lines = text.split('\n')
+#     matches = [line for line in lines if not re.search(pattern, line)]
+#     return matches
+def extract_extended_pattern():
+    pass
 def extract_patterns_per_page(file_path: str, pattern: str, extend: bool = True) -> list:
     reader = PyPDFLoader(file_path)
     documents = reader.load()
@@ -76,9 +76,53 @@ def extract_patterns_per_page(file_path: str, pattern: str, extend: bool = True)
     return result
 
 
-# Please remove from here.
-pattern = "ART.CULO\s\d+.+:"
-# Important for EnsambleRetriever
+def obtain_header_paragraphs(text: list, extraction: list) -> list:
+    """
+    Obtain the paragraphs that are under the header of the extraction
+    
+    Parameters:
+    - text (list): A list of strings containing the text of the policy.
+    - extraction (list): A list of strings containing the headers of the articles.
+    
+    Returns:
+    list: A list of lists of strings, each list containing the paragraphs of the policy
+    """
+    paragraph = []
+    for i, line in enumerate(text):
+        cache = []
+        if line in extraction:
+            while True:
+                i += 1
+                if text[i].strip() == "":
+                    continue
+                if text[i] in extraction:
+                    paragraph.append(" ".join(cache))
+                    cache = []
+                    break
+                if len(cache) > 15:
+                    while True:
+                        if not cache[-1].strip().endswith("."):
+                            cache.pop()
+                        else:
+                            break
+                    paragraph.append(" ".join(cache))
+                    cache = []
+                    break
+                if len(paragraph) == len(extraction) -1:
+                    #TODO: ver una manera de obtener el ultimo articulo sin repetir el codigo de arriba
+                    # articles.append(cache)
+                    # print(text[i])
+                    print(f"function: {__name__}.obtain_header_paragraphs - pending work")
+                    
+                    
+                    
+                    break
+
+                cache.append(text[i].strip())
+        # HINT: usar un segundo cache? 
+        # encontrar otra condicion de exit? -> if (len(paragraph) == len(extraction) -1) and (...):
+                
+    return paragraph
 
 def distribute_weights(string_list):
     """Distribute the weights of a list of strings based on their length."""
