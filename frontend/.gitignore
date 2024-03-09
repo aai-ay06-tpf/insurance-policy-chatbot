@@ -1,0 +1,4 @@
+chainlit_rag/*
+chainlit_app_2.py
+*.pkl
+*_borrar*
