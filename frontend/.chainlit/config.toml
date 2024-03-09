@@ -39,7 +39,7 @@ multi_modal = true
 
 [UI]
 # Name of the app and chatbot.
-name = "Chatbot"
+name = "teamoneAI"
 
 # Show the readme while the thread is empty.
 show_readme_as_default = true
@@ -72,26 +72,25 @@ hide_cot = false
 
 # Override default MUI light theme. (Check theme.ts)
 [UI.theme]
-    #font_family = "Inter, sans-serif"
+    font_family = "Roboto,Helvetica,Arial,sans-serif"
 [UI.theme.light]
     #background = "#FAFAFA"
     #paper = "#FFFFFF"
 
     [UI.theme.light.primary]
-        #main = "#F80061"
-        #dark = "#980039"
-        #light = "#FFE7EB"
+        main = "#00FFB2"
+        dark = "#980039"
+        light = "#FFE7EB"
 
 # Override default MUI dark theme. (Check theme.ts)
 [UI.theme.dark]
-    #background = "#FAFAFA"
-    #paper = "#FFFFFF"
+    background = "#293A62"
+    paper = "#182B56"
 
     [UI.theme.dark.primary]
-        #main = "#F80061"
-        #dark = "#980039"
-        #light = "#FFE7EB"
-
+        main = "#00FFB2"
+        dark = "#182B56"
+        light = "#293A62"
 
 [meta]
 generated_by = "1.0.301"

@@ -2,7 +2,16 @@ import chainlit as cl
 from ml_service.retrievers import obtain_retrievers
 from ml_service.simple_rag import obtain_rag_chain
 
-
+@cl.password_auth_callback
+def auth_callback(username: str, password: str):
+    # Fetch the user matching username from your database
+    # and compare the hashed password with the value stored in the database
+    if (username, password) == ("admin", "admin"):
+        return cl.User(
+            identifier="admin", metadata={"role": "admin", "provider": "credentials"}
+        )
+    else:
+        return None
 
 @cl.on_chat_start
 async def init():
@@ -25,8 +34,6 @@ async def init():
     msg.content = f"Chat loaded. You can now ask questions!"
     await msg.update()
     
-
-
 
 
 @cl.on_message
