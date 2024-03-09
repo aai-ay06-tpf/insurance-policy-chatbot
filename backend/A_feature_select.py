@@ -129,6 +129,7 @@ if __name__ == "__main__":
     pdf_files = os.listdir(DOWNLOAD_PATH)
     patterns = ["^ART.CULO\s\d+.:?"]
     
+    # Obtain the features data
     file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
     
     # First Feature: Extracting the article titles and policy header
@@ -137,7 +138,7 @@ if __name__ == "__main__":
     # Second Feature: Extracting the article headers from policies
     feature_articles = create_feature_article(file_batch)
     
-    
+    # Save the features
     with open(os.path.join(FEATURES_PATH, f"feature_files.pkl"), "wb") as f:
         pickle.dump(feature_files, f)
     
