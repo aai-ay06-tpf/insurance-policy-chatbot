@@ -55,13 +55,14 @@ def create_file_batch(files:list, func: Callable, *args: tuple) -> list:
 
 
 
-def create_feature_file(batch_files: list) -> list:
+def create_feature_file(batch_files: list, func: Callable) -> list:
     """
     Create list of langchain Documents in which each document is a representation of all the articles in the policy
     with the corresponding preprocessing and metadata.
     
     Parameters:
     - batch_files (list): A list of tuples containing the file path and the pattern to be used to extract the articles.
+    - func (function): The function to be used to extract the articles from the text.
     
     Returns:
     List[Document]: A list of langchain Documents.
@@ -69,7 +70,7 @@ def create_feature_file(batch_files: list) -> list:
     
     filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
     
-    extractions = [extract_patterns(file, pattern) for file, pattern in batch_files]
+    extractions = [func(file, pattern) for file, pattern in batch_files]
     
     articles = [" ".join(element).lower() for element in [remove_pattern_from_lines(extraction, pattern) for extraction, (_, pattern) in zip(extractions, batch_files)]]
     
@@ -91,7 +92,7 @@ def create_feature_file(batch_files: list) -> list:
     return [Document(page_content=feature, metadata={"file": filenames[i]}) for i, feature in enumerate(features)]
     
     
-def create_feature_article(batch_files: list) -> list:
+def create_feature_article(batch_files: list, func: Callable) -> list:
     """
     
     TODO: REVIEW THIS DOCS
@@ -101,6 +102,7 @@ def create_feature_article(batch_files: list) -> list:
     
     Parameters:
     - batch_files (list): A list of tuples containing the file path and the pattern to be used to extract the articles.
+    - func (function): The function to be used to extract the articles from the text.
     
     Returns:
     List[ List[Document] ]: A list of lists of langchain Documents.
@@ -108,7 +110,7 @@ def create_feature_article(batch_files: list) -> list:
     
     filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
     
-    extractions = [extract_patterns(file, pattern) for file, pattern in batch_files]
+    extractions = [func(file, pattern) for file, pattern in batch_files]
     
     splitted_text = [extract_text(file).splitlines() for file, _ in batch_files]
     
@@ -133,10 +135,10 @@ if __name__ == "__main__":
     file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
     
     # First Feature: Extracting the article titles and policy header
-    feature_files = create_feature_file(file_batch)
+    feature_files = create_feature_file(file_batch, extract_patterns)
     
     # Second Feature: Extracting the article headers from policies
-    feature_articles = create_feature_article(file_batch)
+    feature_articles = create_feature_article(file_batch, extract_patterns)
     
     # Save the features
     with open(os.path.join(FEATURES_PATH, f"feature_files.pkl"), "wb") as f:
