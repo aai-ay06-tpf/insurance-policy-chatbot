@@ -1,7 +1,0 @@
-chainlit
-cohere
-langchain
-sentence-transformers
-rank_bm25
-qdrant-client
-llama-cpp-python
