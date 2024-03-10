@@ -45,10 +45,10 @@ def obtain_header_paragraphs(text: list, extraction: list) -> list:
 
     Parameters:
     - text (list): A list of strings containing the text of the policy.
-    - extraction (list): A list of strings containing the headers of the articles.
+    - extraction (list): A list of strings containing the article titles.
 
     Returns:
-    list: A list of lists of strings, each list containing the paragraphs of the policy
+    list: A list of lists of strings, each list containing the header paragraphs of the policy
     """
     paragraph = []
     for i, line in enumerate(text):
