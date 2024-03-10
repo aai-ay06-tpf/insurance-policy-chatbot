@@ -1,11 +1,7 @@
-boto3
-pypdf
-#PyPDF2
-langchain
-langchain-openai
-#chromadb
-python-dotenv
-#rank_bm25
-qdrant-client
-gpt4all
+chainlit
 cohere
+langchain
+sentence-transformers
+rank_bm25
+qdrant-client
+llama-cpp-python

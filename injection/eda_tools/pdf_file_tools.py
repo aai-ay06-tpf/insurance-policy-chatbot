@@ -3,9 +3,18 @@ from pypdf import PdfReader
 
 
 def extract_text(file_path: str) -> str:
+    """Return the text of a PDF file as a single string."""
     reader = PdfReader(file_path)
     text = ''.join('\n'.join(page.extract_text() for page in reader.pages))
     return text
+
+
+def extract_patterns(file_path: str, pattern: str) -> list:
+    """Extract the whole lines from a PDF file in which the specified pattern is found."""
+    text = extract_text(file_path)
+    lines = text.split('\n')
+    matches = [line.replace(".", "") for line in lines if re.search(pattern, line)]
+    return matches
 
 
 def remove_pattern_from_lines(lines: list, pattern: str) -> list:
@@ -19,9 +28,7 @@ def remove_pattern_from_lines(lines: list, pattern: str) -> list:
         pattern (str): The pattern to remove from each line.
 
     Returns:
-        list: A list of strings with the specified pattern removed from each line,
-        with double whitespaces removed, and with whitespace trimmed from the
-        beginning and end of each line.
+        list: A list of preprocessed strings with the specified pattern removed from each line.
     """
 
     cleaned_lines = []
@@ -30,14 +37,6 @@ def remove_pattern_from_lines(lines: list, pattern: str) -> list:
         cleaned_line = re.sub(r'\s+', ' ', cleaned_line)
         cleaned_lines.append(cleaned_line)
     return cleaned_lines
-
-
-def extract_patterns(file_path: str, pattern: str) -> list:
-    reader = PdfReader(file_path)
-    text = ''.join('\n'.join(page.extract_text() for page in reader.pages))
-    lines = text.split('\n')
-    matches = [line for line in lines if re.search(pattern, line)]
-    return matches
 
 
 def obtain_header_paragraphs(text: list, extraction: list) -> list:
