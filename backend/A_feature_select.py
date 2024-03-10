@@ -129,7 +129,7 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
 if __name__ == "__main__":
     
     pdf_files = os.listdir(DOWNLOAD_PATH)
-    patterns = ["^ART.CULO\s\d+.:?"]
+    patterns = ["^ART.CULO\s(?:N.\s)?\d+.:?"]
     
     # Obtain the features data
     file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
