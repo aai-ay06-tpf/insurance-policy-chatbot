@@ -23,6 +23,7 @@ Utiliza el siguiente contexto para formular la respuesta:
 [EOS]
  """
 
+from langchain_openai import ChatOpenAI
 
 def obtain_rag_chain(retriever):
     
@@ -31,10 +32,16 @@ def obtain_rag_chain(retriever):
         template=prompt_template,
     )
     
-    llm = Cohere(
-        model="command",
-        cohere_api_key=os.getenv("COHERE_API_KEY"),
-        temperature=0.33
+    # llm = Cohere(
+    #     model="command",
+    #     cohere_api_key=os.getenv("COHERE_API_KEY"),
+    #     temperature=0.33
+    # )
+    
+    llm = ChatOpenAI(
+        model="gpt-3.5-turbo",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        temperature=0.1
     )
 
     llm_chain = LLMChain(llm=llm, prompt=prompt)
@@ -45,3 +52,14 @@ def obtain_rag_chain(retriever):
     )
 
     return rag_chain
+
+
+if __name__ == "__main__":
+    from ml_service.retrievers import obtain_feature_file_retrievers
+    
+    retriever = obtain_feature_file_retrievers(vdb_name="", collection_name="")
+    
+    chain_llm = obtain_rag_chain(retriever)
+    
+    chain_llm.invoke("recomendame un articulo para hacer crecer el pelo")
+    
