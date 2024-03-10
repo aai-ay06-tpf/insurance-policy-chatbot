@@ -13,7 +13,7 @@ def extract_patterns(file_path: str, pattern: str) -> list:
     """Extract the whole lines from a PDF file in which the specified pattern is found."""
     text = extract_text(file_path)
     lines = text.split('\n')
-    matches = [line for line in lines if re.search(pattern, line)]
+    matches = [line.replace(".", "") for line in lines if re.search(pattern, line)]
     return matches
 
 
