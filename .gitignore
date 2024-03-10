@@ -3,6 +3,8 @@
 
 # Entorno virtual
 tpf/*
+qdrant_collections/*
+
 
 
 # Byte-compiled / optimized / DLL files

@@ -1,14 +1,18 @@
-# Welcome to Chainlit! 🚀🤖
+# Welcome to teamoneAI! 🚀🤖
 
-Hi there, Developer! 👋 We're excited to have you on board. Chainlit is a powerful tool designed to help you prototype, debug and share applications built on top of LLMs.
+Hello there! How can I assist you today? I'm your virtual assistant specialized in insurance. 👋 I'm here to answer your questions about insurance policies and help you find the best option for you.
 
-## Useful Links 🔗
+## Here are some common topics I can assist you with: 🔍
+- Types of available insurance policies.
+- Coverages included in insurance policies.
+- Procedure for filing claims.
+- Information about policy renewals and updates.
 
-- **Documentation:** Get started with our comprehensive [Chainlit Documentation](https://docs.chainlit.io) 📚
-- **Discord Community:** Join our friendly [Chainlit Discord](https://discord.gg/k73SQ3FyUh) to ask questions, share your projects, and connect with other developers! 💬
+Feel free to ask whatever you need! I'm here to help you better understand your insurance options and make informed decisions. 💬
 
-We can't wait to see what you create with Chainlit! Happy coding! 💻😊
+To access more detailed information about our products and services, check out the following links: 🔗
+- **[Documentation](#)**: Get more details about our different types of insurance policies and how they work.
+- **[Help Center](#)**: Find answers to frequently asked questions and solutions to common problems.
+- **[Live Chat](#)**: Connect with a live agent if you need personalized assistance or have urgent questions.
 
-## Welcome screen
-
-To modify the welcome screen, edit the `chainlit.md` file at the root of your project. If you do not want a welcome screen, just leave this file empty.
+I hope to help you protect what matters most. Don't hesitate to start the conversation! 💻😊
