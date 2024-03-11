@@ -38,11 +38,14 @@ def create_file_batch(files:list, func: Callable, *args: tuple) -> list:
             # Once the file was added there is no need to check with other arguments
             if selected_file in (batch[0] for batch in batch_files):
                 continue
+            
             # Function Execution
-            print(func(selected_file, arg))
+            patterns = func(selected_file, arg)
+            for pattern in patterns: print(pattern)
+
             # UI Context
             filename = selected_file.split("\\")[-1].replace(".pdf", "")
-            print(f"File: {filename}")
+            print(f"\nFile: {filename}")
             ui = input("Want to add this file to the batch? (y/n): ")
             print()
             # Output Management
@@ -129,6 +132,7 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
 if __name__ == "__main__":
     
     pdf_files = os.listdir(DOWNLOAD_PATH)
+    print(DOWNLOAD_PATH)
     patterns = ["^ART.CULO\s(?:N.\s)?\d+.:?"]
     
     # Obtain the features data
