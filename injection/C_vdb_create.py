@@ -31,27 +31,23 @@ def create_vector_db(
     embedding = emb.obtain_embeddings(embedding_label)
 
     # Create the containerized vector database
-    try:
-        Qdrant.from_documents(
-            documents=chunks,
-            embedding=embedding,
-            url=QDRANT_URL,
-            prefer_grpc=True,
-            collection_name=f"{collection_prefix}_{emb.get_current()}"
-        )
-    except:
-        print(f"Error creating vector database for {collection_prefix}")
-        print("check if the vector database is already created.\n")
-        return None
+    Qdrant.from_documents(
+        documents=chunks,
+        embedding=embedding,
+        url=QDRANT_URL,
+        prefer_grpc=True,
+        collection_name=f"{collection_prefix}_{emb.get_current()}"
+    )
+
 
 if __name__ == "__main__":
 
     # DEFINE DE EMBEDDING MODEL
-    embedding_label = "sbert_embeddings"
+    embedding_label = "openai_embeddings"
     
     # LOAD THE FEATURES
-    feature_files_path = os.path.join(FEATURES_PATH, "grouped_feature_files.pkl")
-    feature_articles_path = os.path.join(FEATURES_PATH, "grouped_feature_articles.pkl")
+    feature_files_path = os.path.join(FEATURES_PATH, "feature_files.pkl")
+    feature_articles_path = os.path.join(FEATURES_PATH, "feature_articles.pkl")
     
     with open(feature_files_path, "rb") as file:
         feature_files = pickle.load(file)
@@ -63,7 +59,7 @@ if __name__ == "__main__":
     create_vector_db(
         chunks=feature_files,
         embedding_label=embedding_label,
-        collection_prefix="all_grouped_files"
+        collection_prefix="all_files"
     )
     
     # CREATE VECTOR DATABASE - FEATURE ARTICLES
