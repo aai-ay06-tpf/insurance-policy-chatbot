@@ -239,7 +239,8 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 Document(
                     page_content=file_content_hip[j].lower(),
                     metadata={
-                        "file": f"{policy_names[0]}_{policy_names[j]}"
+                        "file": f"{policy_names[0]}_{policy_names[j]}",
+                        "policy_header": headers[j]
                     }
                 )
             )
