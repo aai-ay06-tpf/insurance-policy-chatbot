@@ -88,11 +88,11 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
         for word in header.split(" "):
             if word.isupper() and word.isalpha():
                 new_header.append(word)
-        cleaned_policy_headers.append(" ".join(new_header).lower())
+        cleaned_policy_headers.append(" ".join(new_header))
         
-    features = [f"{header} {article}" for article, header in zip(articles, cleaned_policy_headers)]
+    features = [f"{header.lower()} {article}" for article, header in zip(articles, cleaned_policy_headers)]
     
-    return [Document(page_content=feature, metadata={"file": filenames[i]}) for i, feature in enumerate(features)]
+    return [Document(page_content=feature, metadata={"file": filenames[i], "policy_header": cleaned_policy_headers[i]}) for i, feature in enumerate(features)]
     
     
 def create_feature_article(batch_files: list, func: Callable) -> list:
