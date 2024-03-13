@@ -20,9 +20,10 @@ def download_data():
 
 
 if __name__ == "__main__":
-    # Check if there are existing files in the DOWNLOAD_PATH
-    if not os.listdir(DOWNLOAD_PATH):
+    try:
         download_data()
-
-    else:
-        print("Already downloaded.")
+        print("Done!")
+    except Exception as e:
+        print(e)
+        print("Failed to download data")
+        

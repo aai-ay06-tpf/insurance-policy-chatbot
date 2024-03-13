@@ -239,7 +239,8 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 Document(
                     page_content=file_content_hip[j].lower(),
                     metadata={
-                        "file": f"{policy_names[0]}/{policy_names[j]}"
+                        "file": f"{policy_names[0]}_{policy_names[j]}",
+                        "policy_header": headers[j]
                     }
                 )
             )
@@ -270,7 +271,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
             features = []
             for k, content in enumerate(contents):
                 # filename/policy_name
-                policy_name = f"{policy_names[0]}/{policy_names[j]}"
+                policy_name = f"{policy_names[0]}_{policy_names[j]}"
                 # article_name
                 article_name = pdf[j][k]
                 features.append(
