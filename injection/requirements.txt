@@ -9,3 +9,4 @@ python-dotenv
 qdrant-client
 gpt4all
 cohere
+spacy
