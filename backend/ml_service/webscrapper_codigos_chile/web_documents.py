@@ -37,7 +37,7 @@ def obtain_scrapped_documents(web_id: str, articles: list) -> list:
             start_index = next((i for i, line in enumerate(
                 cleaned_lines) if line.endswith(start_marker)), None)
             end_index = next((i for i, line in enumerate(
-                cleaned_lines[::-1]) if line.startswith(end_marker)), None)
+                cleaned_lines) if line.startswith(end_marker)), None)
 
             if start_index is not None and end_index is not None:
                 relevant_content = cleaned_lines[start_index + 1:end_index]
