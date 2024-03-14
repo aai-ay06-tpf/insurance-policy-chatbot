@@ -292,8 +292,8 @@ if __name__ == "__main__":
 
     pdf_files = os.listdir(DOWNLOAD_PATH)
 
-    # patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?"]
-    patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?", "^\s?(?:ART|Art).(?:CULO|culo)\s(?:N.\s)?(\d)+(?:.|:)+$"]
+    patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?"]
+    # patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?", "^\s?(?:ART|Art).(?:CULO|culo)\s(?:N.\s)?(\d)+(?:.|:)+$"]
 
     # Obtain the features data
     file_batch = create_file_batch(

@@ -1,22 +1,65 @@
-import os, pickle
-
-from eda_tools.preprocess_stopwords import apply_stopwords, preprocess_non_printable_characters
+import pickle, os, re
 from utils.config import FEATURES_PATH
+from langchain_core.documents.base import Document
+from eda_tools.preprocess_stopwords import apply_stopwords, preprocess_non_printable_characters
 
+# Build the paths for the articles bin files 
+simple_results = os.path.join(FEATURES_PATH, 'simple_files_results.pkl')
+grouped_results = os.path.join(FEATURES_PATH, 'grouped_files_results.pkl')
 
+# Load the articles
+with open(simple_results, 'rb') as f:
+    simple_data = pickle.load(f)
+with open(grouped_results, 'rb') as f:
+    grouped_data = pickle.load(f)
 
-# leer el objeto results_....pkl
+# Gather all the information on a single list
+all_data = simple_data + grouped_data
 
+# Get the content for each article
+all_contents = [article[3] for policy in all_data for article in policy]
 
+# Remove '\n' and '\t' characters
+all_contents = [re.sub(r'[\n\t]', ' ', content) for content in all_contents]
+    
+# Remove extra spaces
+all_contents = [re.sub(r'\s+', ' ', content) for content in all_contents]
 
-# crear una lista para cada pdf, que contenga el contenido -> tupla[-1]
+# clean non printable chars
+preprocessing = [preprocess_non_printable_characters(content) for content in all_contents]
 
-# considerar un bucle para simple, uno para grouped
+# clean stopwords
+features = apply_stopwords(preprocessing)
 
+# build again the 
+feature_contents = []
+ci = 0
+for policy in all_data:
+    for article in policy:
+        if "_" in article[1]:
+            policy_file = article[1].split("_")[0]
+            policy_name = article[1].split("_")[1]
+        else:
+            policy_file = article[1]
+            policy_name = article[1]
 
-# aplicar el metodo apply_stopwords a cada lista
+        policy_header = article[0]
+        article_title = article[2]
+        page_content = features[ci]
+        ci += 1
 
+        feature_contents.append(
+            Document(
+                page_content=page_content,
+                metadata={
+                    "policy_file": policy_file + ".pdf",
+                    "policy_name": policy_name,
+                    "policy_header": policy_header,
+                    "article_title": article_title
+                }
+            )
+        )
 
-# *crear los bucles para generar los langchaing.Document
-
-# guardar la feature content serializada en la carpeta '.serialized_features' con el nombre 'feature_contents.pkl'
+# Save the features
+with open(os.path.join(FEATURES_PATH, f"feature_contents.pkl"), "wb") as f:
+    pickle.dump(feature_contents, f)
