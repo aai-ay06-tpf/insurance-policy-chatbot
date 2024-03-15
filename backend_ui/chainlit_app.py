@@ -1,8 +1,6 @@
 import os
 
 import chainlit as cl
-from ml_service.retrievers import articles_lotr_retriever, files_lotr_retriever
-from ml_service.simple_rag import obtain_rag_chain
 
 from utils.config import QDRANT_LOCAL_PATH
 
