@@ -1,3 +1,39 @@
+"""
+Examples of retriever search_kwargs:
+
+# Retrieve more documents with higher diversity
+# Useful if your dataset has many similar documents
+docsearch.as_retriever(
+    search_type="mmr",
+    search_kwargs={'k': 6, 'lambda_mult': 0.25}
+)
+
+# Fetch more documents for the MMR algorithm to consider
+# But only return the top 5
+docsearch.as_retriever(
+    search_type="mmr",
+    search_kwargs={'k': 5, 'fetch_k': 50}
+)
+
+# Only retrieve documents that have a relevance score
+# Above a certain threshold
+docsearch.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={'score_threshold': 0.8}
+)
+
+# Only get the single most similar document from the dataset
+docsearch.as_retriever(search_kwargs={'k': 1})
+
+# Use a filter to only retrieve documents from a specific paper
+docsearch.as_retriever(
+    search_kwargs={'filter': {'paper_title':'GPT-4 Technical Report'}}
+)
+
+Ref:
+* https://api.python.langchain.com/en/latest/vectorstores/langchain_community.vectorstores.qdrant.Qdrant.html#langchain_community.vectorstores.qdrant.Qdrant.as_retriever
+"""
+
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 
