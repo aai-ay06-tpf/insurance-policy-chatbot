@@ -14,7 +14,7 @@ load_dotenv()
 
 pdf_files = os.listdir(DOWNLOAD_PATH)
 
-# for file in pdf_files: # "supuestamente"
+# for file in pdf_files:
 selected_file = os.path.join(DOWNLOAD_PATH, pdf_files[0])
 
 loader = PyPDFLoader(selected_file)

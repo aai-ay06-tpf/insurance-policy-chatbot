@@ -1,6 +1,8 @@
+import os
+
 import chainlit as cl
-from ml_service.retrievers import obtain_retrievers
-from ml_service.simple_rag import obtain_rag_chain
+
+from utils.config import QDRANT_LOCAL_PATH
 
 @cl.password_auth_callback
 def auth_callback(username: str, password: str):
@@ -13,22 +15,28 @@ def auth_callback(username: str, password: str):
     else:
         return None
 
+
 @cl.on_chat_start
 async def init():
     
     msg = cl.Message(content=f"Processing chat components…")
     await msg.send()
     
-    # Values for obtaining the retrievers from the vector database
-    collection_name = "sbert_embeddings"
-    vdb_name="all_files"
+    embedding_name = "sbert_embeddings"
+    
+    files_ = [element for element in os.listdir(QDRANT_LOCAL_PATH) if (element.startswith("all") and element.endswith(embedding_name))]
+    articles_ = [element for element in os.listdir(QDRANT_LOCAL_PATH) if (element.startswith("POL") and element.endswith(embedding_name))]
     
     # Retriever
-    retriever = obtain_retrievers(vdb_name, collection_name)
-    cl.user_session.set("retriever", retriever)
+    file_retriever = files_lotr_retriever(collection_names=files_)
+    article_retriever = articles_lotr_retriever(collection_names=articles_)
+    cl.user_session.set("file_retriever", file_retriever)
+    cl.user_session.set("article_retriever", article_retriever)
+    
+    
     
     # Chain
-    chain = obtain_rag_chain(retriever)
+    chain = obtain_rag_chain(article_retriever)
     cl.user_session.set("chain", chain)
     
     msg.content = f"Chat loaded. You can now ask questions!"
@@ -38,10 +46,23 @@ async def init():
 
 @cl.on_message
 async def main(message: cl.Message):
-    import sys
-    sys.exit(0)
+
     # Get the user session
     chain = cl.user_session.get("chain")
+    file_retriever = cl.user_session.get("file_retriever")
+    article_retriever = cl.user_session.get("article_retriever")
+    
+    # ejecutar el file retriever con invoke en el message
+    
+    # ejecutar el article retriever con invoke en el message
+    
+    # filtrar los articles por el top match del file
+    
+    # enviar los matches por pantalla al usuario con un hardcoded input
+    
+    # interpretar la segunda respuesta del user para ejecutar el modelo
+    #TODO: la conversión debe poder reiniciarse en este punto.
+    
     
     # Make the prediction
     response = await chain.ainvoke(input=message.content)

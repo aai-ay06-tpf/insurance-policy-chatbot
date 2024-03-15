@@ -12,9 +12,10 @@ from eda_tools.pdf_file_tools import (
     obtain_header_paragraphs
 )
 from utils.config import DOWNLOAD_PATH, FEATURES_PATH
+from eda_tools.preprocess_stopwords import preprocess_non_printable_characters, remove_stopwords
 
 
-def check_secuence(lst):
+def check_sequence(lst):
     for i in range(1, len(lst)):
         if not (lst[i] == lst[i-1] + 1):
             return False
@@ -43,7 +44,7 @@ def extract_grouped_patterns(file_path: str, pattern: str) -> list:
     matches = [line for line in lines if re.search(pattern, line)]
     # obtain the groups of the pattern
     groups = [int(re.search(pattern, line).groups()[0]) for line in matches]
-    if check_secuence(groups):
+    if check_sequence(groups):
         return ["no patterns to be grouped."]
 
     # Group the matches
@@ -91,7 +92,7 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
             for r in res:
                 print(r)
             # UI Context
-            filename = selected_file.split("\\")[-1].replace(".pdf", "")
+            filename = os.path.basename(selected_file).replace(".pdf", "")
             print(f"File: {filename}")
             ui = input("Want to add this file to the batch? (y/n): ")
             print()
@@ -103,6 +104,9 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
 
     return batch_files[1:]
 
+
+def clean_article_title():
+    pass
 
 def create_grouped_feature(batch_files: list, func: Callable) -> list:
     """
@@ -136,8 +140,13 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
     for pdf, (_, pattern) in zip(extractions, batch_files):
         section = []
         for extraction in pdf:
-            section.append(" ".join(remove_pattern_from_lines(
-                extraction, pattern)).replace(".", ""))
+                # ", ".join(remove_pattern_from_lines(
+                # extraction, pattern))
+                art = re.sub(r"[-\.]", "", ", ".join(remove_pattern_from_lines(
+                extraction, pattern)))
+                art = re.sub(r"\s+", " ", art).strip()
+                section.append(art)
+                
         articles.append(section)
 
     # Preparing of the page_content about headers
@@ -230,7 +239,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
     feature_files = []
     for i in range(len(first_policy_headers)):
         headers = [first_policy_headers[i]] + middle_policies_header[i]
-        file_content_hip = [" ".join(element)
+        file_content_hip = [": ".join(element)
                             for element in list(zip(headers, articles[i]))]
         policy_names = [first_policy_names[i]] + middle_policies_names[i]
 
@@ -264,6 +273,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
             fragments.append(text[fi:li])
         fragments += [text[li:]]
 
+        headers = [first_policy_headers[i]] + middle_policies_header[i]
         article_content = [obtain_header_paragraphs(
             fragments[j].splitlines(), extraction) for j, extraction in enumerate(pdf)]
 
@@ -273,12 +283,17 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 # filename/policy_name
                 policy_name = f"{policy_names[0]}_{policy_names[j]}"
                 # article_name
-                article_name = pdf[j][k]
+                article_name = re.sub(batch_files[i][1], "", pdf[j][k])
+                article_name = re.sub(r"[-\.]", " ", article_name)
+                article_name = re.sub(r"\s+", " ", article_name).strip()
+                content = re.sub(r"\\t", " ", content)
+                content = re.sub(r"\s+", " ", content)
                 features.append(
                     Document(
-                        page_content=content,
+                        page_content = preprocess_non_printable_characters(article_name + ": " + content),
                         metadata={
                             "file": policy_name,
+                            "policy_header": headers[j],
                             "article": article_name
                         }
                     )
