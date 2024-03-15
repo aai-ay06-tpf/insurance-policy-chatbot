@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from qdrant_client import QdrantClient
 from langchain_community.vectorstores.qdrant import Qdrant
 from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain_openai.chat_models.base import ChatOpenAI
+from langchain_community.chat_models.openai import ChatOpenAI
 
 from ml_service.tools.embeddings import Embeddings
 from utils.config import QDRANT_HOST, QDRANT_PORT
