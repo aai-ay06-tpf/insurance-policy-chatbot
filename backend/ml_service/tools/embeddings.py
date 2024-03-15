@@ -1,3 +1,18 @@
+"""Doc summary:
+
+The Embedding class presented it conglomerates the different embeddings models that are available.
+The class EmbeddingsLabels and EmbeddingsModels are connected to the Embedding class, and they are used to
+define the choices of embeddings models that are available.
+
+For adding a new model: 
+    - add a new alias and the corresponding model name for the embedding model
+    - add the new model to the `obtain_embeddings` method (add a new return)
+    - create the method that invokes the new model at the bottom of the class
+
+Warning: some models require an API key, and also, libraries installed in the environment.
+
+"""
+
 import os
 from enum import Enum
 from dotenv import load_dotenv
