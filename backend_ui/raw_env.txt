@@ -1,0 +1,10 @@
+[qdrant]
+QDRANT_URL = http://localhost:6333
+QDRANT_HOST = localhost
+QDRANT_PORT = 6333
+
+[openai]
+OPENAI_API_KEY =
+
+[cohere]
+COHERE_API_KEY =
