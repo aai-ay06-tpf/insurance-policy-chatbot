@@ -14,7 +14,7 @@ from eda_tools.pdf_file_tools import (
 from utils.config import DOWNLOAD_PATH, FEATURES_PATH
 
 
-def check_secuence(lst):
+def check_sequence(lst):
     for i in range(1, len(lst)):
         if not (lst[i] == lst[i-1] + 1):
             return False
@@ -43,7 +43,7 @@ def extract_grouped_patterns(file_path: str, pattern: str) -> list:
     matches = [line for line in lines if re.search(pattern, line)]
     # obtain the groups of the pattern
     groups = [int(re.search(pattern, line).groups()[0]) for line in matches]
-    if check_secuence(groups):
+    if check_sequence(groups):
         return ["no patterns to be grouped."]
 
     # Group the matches
@@ -91,7 +91,7 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
             for r in res:
                 print(r)
             # UI Context
-            filename = selected_file.split("\\")[-1].replace(".pdf", "")
+            filename = os.path.basename(selected_file).replace(".pdf", "")
             print(f"File: {filename}")
             ui = input("Want to add this file to the batch? (y/n): ")
             print()

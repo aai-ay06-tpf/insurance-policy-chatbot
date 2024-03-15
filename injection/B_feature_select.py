@@ -16,7 +16,7 @@ start = time.time()
 
 def create_file_batch(files:list, func: Callable, *args: tuple) -> list:
     """
-    Create a file batch by inspecting the output of a given function with many differnte arguments.
+    Create a file batch by inspecting the output of a given function with many different RegEx patterns.
     The function will be asking the user if the output is correct, and if not, the user can remove the file from the batch.
 
     Parameters:
@@ -41,7 +41,7 @@ def create_file_batch(files:list, func: Callable, *args: tuple) -> list:
             # Function Execution
             print(func(selected_file, arg))
             # UI Context
-            filename = selected_file.split("\\")[-1].replace(".pdf", "")
+            filename = os.path.basename(selected_file).replace(".pdf", "")
             print(f"File: {filename}")
             ui = input("Want to add this file to the batch? (y/n): ")
             print()
@@ -68,7 +68,7 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
     List[Document]: A list of langchain Documents.
     """
     
-    filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
+    filenames = [os.path.basename(filename).replace(".pdf", "") for filename, _ in batch_files]
     
     extractions = [func(file, pattern) for file, pattern in batch_files]
     
@@ -108,7 +108,7 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
     List[ List[Document] ]: A list of lists of langchain Documents.
     """
     
-    filenames = [filename.split("\\")[-1].replace(".pdf", "") for filename, _ in batch_files]
+    filenames = [os.path.basename(filename).replace(".pdf", "") for filename, _ in batch_files]
     
     extractions = [func(file, pattern) for file, pattern in batch_files]
     
@@ -129,6 +129,7 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
 if __name__ == "__main__":
     
     pdf_files = os.listdir(DOWNLOAD_PATH)
+    
     patterns = ["^ART.CULO\s(?:N.\s)?\d+.:?"]
     
     # Obtain the features data
