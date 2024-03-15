@@ -6,7 +6,6 @@ embeddings = emb.obtain_embeddings('ada_embeddings')
 
 
 def obtain_vectorstore_from_docs(documents: list) -> Qdrant:
-    
 
     qdrant = Qdrant.from_documents(
         documents,
@@ -14,5 +13,5 @@ def obtain_vectorstore_from_docs(documents: list) -> Qdrant:
         location=":memory:",
         collection_name="webscrapper_codigo_chile",
     )
-    
+
     return qdrant
