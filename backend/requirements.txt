@@ -5,3 +5,4 @@ sentence-transformers
 rank_bm25
 qdrant-client
 llama-cpp-python
+langchain-text-splitters
