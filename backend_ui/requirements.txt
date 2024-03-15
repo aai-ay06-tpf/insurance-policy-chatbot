@@ -1,8 +1,7 @@
-chainlit
-cohere
-langchain
-sentence-transformers
-rank_bm25
-qdrant-client
-llama-cpp-python
-langchain-text-splitters
+python-dotenv==1.0.1
+langchain==0.1.12
+langchain_openai==0.0.8
+qdrant-client==1.8.0
+bs4==0.0.2
+chainlit==1.0.401
+chromadb==0.4.24
