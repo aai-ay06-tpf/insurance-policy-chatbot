@@ -38,7 +38,7 @@ def preprocess_non_printable_characters(input_string: str, preserv_symbols: bool
     return input_string.strip()
 
 
-def apply_stopwords(contenido: list) -> list:
+def remove_stopwords(contenido: list) -> list:
     
     corpus_sample = []
     for parrafo in tqdm(contenido):
