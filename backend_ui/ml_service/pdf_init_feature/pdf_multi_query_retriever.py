@@ -1,4 +1,6 @@
+# https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever
 import os
+import logging
 from dotenv import load_dotenv
 
 from qdrant_client import QdrantClient
@@ -36,5 +38,10 @@ def obtain_multiquery_retriever_init():
     # Multiquery retrieval using OpenAI
     retriever_from_llm = MultiQueryRetriever.from_llm(
         retriever=db.as_retriever(), llm=llm)
+
+    # Set logging for the queries
+    logging.basicConfig()
+    logging.getLogger(
+        "langchain.retrievers.multi_query").setLevel(logging.INFO)
 
     return retriever_from_llm
