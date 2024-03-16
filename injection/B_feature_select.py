@@ -40,8 +40,11 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
             # Once the file was added there is no need to check with other arguments
             if selected_file in (batch[0] for batch in batch_files):
                 continue
+            
             # Function Execution
-            print(func(selected_file, arg))
+            patterns = func(selected_file, arg)
+            for pattern in patterns: print(pattern)
+
             # UI Context
             filename = os.path.basename(selected_file).replace(".pdf", "")
             print(f"File: {filename}")
