@@ -1,7 +1,7 @@
 import pickle, os, re
 from utils.config import FEATURES_PATH
 from langchain_core.documents.base import Document
-from eda_tools.preprocess_stopwords import apply_stopwords, preprocess_non_printable_characters
+from eda_tools.preprocess_stopwords import remove_stopwords, preprocess_non_printable_characters
 
 # Build the paths for the articles bin files 
 simple_results = os.path.join(FEATURES_PATH, 'simple_files_results.pkl')
@@ -29,7 +29,7 @@ all_contents = [re.sub(r'\s+', ' ', content) for content in all_contents]
 preprocessing = [preprocess_non_printable_characters(content) for content in all_contents]
 
 # clean stopwords
-features = apply_stopwords(preprocessing)
+features = remove_stopwords(preprocessing)
 
 # build again the 
 feature_contents = []

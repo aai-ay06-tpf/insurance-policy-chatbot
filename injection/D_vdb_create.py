@@ -2,7 +2,7 @@ import os, time, pickle
 
 from langchain_community.vectorstores.qdrant import Qdrant
 
-from injection.ml_service.tools.embeddings import Embeddings
+from ml_service.tools.embeddings import Embeddings
 from utils.config import QDRANT_URL, FEATURES_PATH
 
 
