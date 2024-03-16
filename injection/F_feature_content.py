@@ -4,8 +4,8 @@ from langchain_core.documents.base import Document
 from eda_tools.preprocess_stopwords import remove_stopwords, preprocess_non_printable_characters
 
 # Build the paths for the articles bin files 
-simple_results = os.path.join(FEATURES_PATH, 'simple_files_results.pkl')
-grouped_results = os.path.join(FEATURES_PATH, 'grouped_files_results.pkl')
+simple_results = os.path.join(FEATURES_PATH, 'simple_files_extractions.pkl')
+grouped_results = os.path.join(FEATURES_PATH, 'grouped_files_extractions.pkl')
 
 # Load the articles
 with open(simple_results, 'rb') as f:
@@ -21,6 +21,10 @@ all_contents = [article[3] for policy in all_data for article in policy]
 
 # Remove '\n' and '\t' characters
 all_contents = [re.sub(r'[\n\t]', ' ', content) for content in all_contents]
+    
+#TODO: Chequear output
+# content = re.sub(r"\\t", " ", content)
+# content = re.sub(r"\s+", " ", content)    
     
 # Remove extra spaces
 all_contents = [re.sub(r'\s+', ' ', content) for content in all_contents]
@@ -61,5 +65,5 @@ for policy in all_data:
         )
 
 # Save the features
-with open(os.path.join(FEATURES_PATH, f"feature_contents.pkl"), "wb") as f:
+with open(os.path.join(FEATURES_PATH, f"final_features.pkl"), "wb") as f:
     pickle.dump(feature_contents, f)

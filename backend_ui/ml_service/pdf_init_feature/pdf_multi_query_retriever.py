@@ -1,10 +1,12 @@
+# https://python.langchain.com/docs/modules/data_connection/retrievers/MultiQueryRetriever
 import os
+import logging
 from dotenv import load_dotenv
 
 from qdrant_client import QdrantClient
 from langchain_community.vectorstores.qdrant import Qdrant
 from langchain.retrievers.multi_query import MultiQueryRetriever
-from langchain_openai.chat_models.base import ChatOpenAI
+from langchain_community.chat_models.openai import ChatOpenAI
 
 from ml_service.tools.embeddings import Embeddings
 from utils.config import QDRANT_HOST, QDRANT_PORT
@@ -36,5 +38,10 @@ def obtain_multiquery_retriever_init():
     # Multiquery retrieval using OpenAI
     retriever_from_llm = MultiQueryRetriever.from_llm(
         retriever=db.as_retriever(), llm=llm)
+
+    # Set logging for the queries
+    logging.basicConfig()
+    logging.getLogger(
+        "langchain.retrievers.multi_query").setLevel(logging.INFO)
 
     return retriever_from_llm

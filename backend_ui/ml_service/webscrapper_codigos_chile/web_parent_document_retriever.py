@@ -1,3 +1,4 @@
+# https://python.langchain.com/docs/modules/data_connection/retrievers/parent_document_retriever
 from langchain_community.vectorstores.chroma import Chroma
 from langchain.retrievers.parent_document_retriever import ParentDocumentRetriever
 from langchain.storage import InMemoryStore
@@ -15,6 +16,8 @@ def obtain_parentdocument_retriever(docs):
     child_splitter = CharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=100, chunk_overlap=20
     )
+    
+    parrent_splitter = []
 
     emb = Embeddings()
     embeddings = emb.obtain_embeddings("openai_embeddings")

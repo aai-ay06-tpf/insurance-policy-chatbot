@@ -294,7 +294,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                         metadata={
                             "file": policy_name,
                             "policy_header": headers[j],
-                            "article": article_name
+                            "article": pdf[j][k]
                         }
                     )
                 )

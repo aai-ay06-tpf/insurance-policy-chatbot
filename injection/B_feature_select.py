@@ -47,7 +47,7 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
 
             # UI Context
             filename = os.path.basename(selected_file).replace(".pdf", "")
-            print(f"\nFile: {filename}")
+            print(f"File: {filename}")
             ui = input("Want to add this file to the batch? (y/n): ")
             print()
             # Output Management
