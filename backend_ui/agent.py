@@ -8,9 +8,13 @@ from langchain.agents.format_scratchpad import format_to_openai_functions
 from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
 
 from langchain_community.vectorstores.qdrant import Qdrant
-from langchain_community.chat_models.openai import ChatOpenAI
-from langchain_community.embeddings import OpenAIEmbeddings
-from langchain_community.tools.convert_to_openai import format_tool_to_openai_function
+from langchain_openai.chat_models.base import ChatOpenAI
+
+
+from langchain_core.utils.function_calling import convert_to_openai_function# https://api.python.langchain.com/en/latest/utils/langchain_core.utils.function_calling.convert_to_openai_function.html#langchain_core.utils.function_calling.convert_to_openai_function
+# from langchain_community.tools.convert_to_openai import format_tool_to_openai_function
+
+
 from langchain_core.documents import Document
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.prompts import (
@@ -23,34 +27,32 @@ from langchain_core.tools import BaseTool
 from langchain.tools.retriever import create_retriever_tool
 
 
-
 from ml_service.pdf_vdb import qdrant_retriever as pdf_qdrant_retriever
 from ml_service.web_scrapper import parent_document_retriever, qdrant_retriever
 from ml_service.tools.embeddings import Embeddings
 
 
 emb = Embeddings()
-embeddings = emb.obtain_embeddings('openai_embeddings')
+embeddings = emb.obtain_embeddings("openai_embeddings")
 
 
 # Retriever params
-search_type="mmr"
-search_kwargs={'k': 3, 'lambda_mult': 0.25}
+search_type = "mmr"
+search_kwargs = {"k": 3, "lambda_mult": 0.25}
 
 
 # web scrapper params
 searchs = [
-    ("codigo_de_comercio", [524, 525, 526]),#, 538]),
+    ("codigo_de_comercio", [524, 525, 526]),  # , 538]),
     ("companias_de_seguros", [3, 10, 36]),
     ("protocolo_seguridad_sanitaria", [18]),
     ("codigo_sanitario", [112]),
-    ("codigo_penal", [470])
+    ("codigo_penal", [470]),
 ]
 
 # Obtain the retrievers
 pdf_retriever = pdf_qdrant_retriever(search_type, search_kwargs)
 web_retriever = qdrant_retriever(searchs, search_type, search_kwargs)
-
 
 
 pdf_tool = create_retriever_tool(
@@ -65,7 +67,6 @@ web_tool = create_retriever_tool(
     name="webscrapper_codigo_chile",
     description="Busca y devuelve extractos de los codigos de ley de la constitucion de Chile.",
 )
-
 
 
 ALL_TOOLS: List[BaseTool] = [pdf_tool, web_tool]
@@ -83,7 +84,7 @@ vectorstore = Qdrant.from_documents(
     location=":memory:",
     collection_name="agent_tools_documents",
 )
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
 
 
 def get_tools(query: str) -> List[Tool]:
