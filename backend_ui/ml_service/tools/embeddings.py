@@ -1,3 +1,18 @@
+"""Doc summary:
+
+The Embedding class presented it conglomerates the different embeddings models that are available.
+The class EmbeddingsLabels and EmbeddingsModels are connected to the Embedding class, and they are used to
+define the choices of embeddings models that are available.
+
+For adding a new model: 
+    - add a new alias and the corresponding model name for the embedding model
+    - add the new model to the `create_embeddings` method (add a new return)
+    - create the method that invokes the new model at the bottom of the class
+
+Warning: some models require an API key, and also, libraries installed in the environment.
+
+"""
+
 import os
 from enum import Enum
 from dotenv import load_dotenv
@@ -49,7 +64,14 @@ class Embeddings():
         self._current = emb_label
 
     def obtain_embeddings(self, emb_label=None):
+        try:
+            result = self.create_embeddings(emb_label)
+            return result
+        except Exception as e:
+            print(f"Error creating the embedding model: {e}")
+            return None
 
+    def create_embeddings(self, emb_label=None):
         if emb_label is not None:
             self.set_current(emb_label)
 

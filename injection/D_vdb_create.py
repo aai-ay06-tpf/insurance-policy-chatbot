@@ -2,7 +2,7 @@ import os, time, pickle
 
 from langchain_community.vectorstores.qdrant import Qdrant
 
-from ml_service.embeddings import Embeddings
+from injection.ml_service.tools.embeddings import Embeddings
 from utils.config import QDRANT_URL, FEATURES_PATH
 
 
@@ -39,7 +39,9 @@ def create_vector_db(
             prefer_grpc=True,
             collection_name=f"{collection_prefix}_{emb.get_current()}"
         )
-    except:
+    except Exception as e:
+        print(e)
+        print()
         print(f"Error creating vector database for {collection_prefix}")
         print("check if the vector database is already created.\n")
         return None
@@ -49,33 +51,50 @@ if __name__ == "__main__":
 
     # DEFINE DE EMBEDDING MODEL
     embedding_label = "openai_embeddings"
-    
-    # LOAD THE FEATURES
-    feature_files_path = os.path.join(FEATURES_PATH, "grouped_feature_files.pkl")
-    feature_articles_path = os.path.join(FEATURES_PATH, "grouped_feature_articles.pkl")
-    
+
+
+    # LOAD ALL THE FEATURES
+    feature_files_path = os.path.join(FEATURES_PATH, "feature_files.pkl")
+    feature_articles_path = os.path.join(FEATURES_PATH, "feature_articles.pkl")
+
     with open(feature_files_path, "rb") as file:
         feature_files = pickle.load(file)
-    
+
     with open(feature_articles_path, "rb") as file:
         feature_articles = pickle.load(file)
+
+
+    feature_files_path = os.path.join(FEATURES_PATH, "grouped_feature_files.pkl")
+    feature_articles_path = os.path.join(FEATURES_PATH, "grouped_feature_articles.pkl")
+
+    with open(feature_files_path, "rb") as file:
+        grouped_feature_files = pickle.load(file)
+
+    with open(feature_articles_path, "rb") as file:
+        grouped_feature_articles = pickle.load(file)
+    
+    # MERGE THE FEATURES OBTAINED
+        
+    merge_1 = list(zip(feature_files, feature_articles))
+    merge_2 = list(zip(grouped_feature_files, grouped_feature_articles))
+
+    init_feature = []
+    for pdf in merge_1:
+        init_feature += [pdf[0]] + pdf[1]
+    for policy in merge_2:
+        init_feature += [policy[0]] + policy[1]
+        
+        
+        
+        
+        
         
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=feature_files,
+        chunks=grouped_feature_files,
         embedding_label=embedding_label,
-        collection_prefix="all_grouped_files"
+        collection_prefix=f"init_pdf_feature_{int(time.time())}"
     )
-    
-    # CREATE VECTOR DATABASE - FEATURE ARTICLES
-    for feature in feature_articles:
-        file = feature[0].metadata["file"]
-        create_vector_db(
-            chunks=feature,
-            embedding_label=embedding_label,
-            collection_prefix=file
-        )
-        time.sleep(0.2)
     
     
     

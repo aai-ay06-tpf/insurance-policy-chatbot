@@ -1,0 +1,15 @@
+[aws-s3]
+ACCESS_KEY =
+SECRET_KEY =
+DATASET_PATH =
+BUCKET_NAME =
+prefix =
+
+[qdrant]
+QDRANT_URL =
+
+[openai]
+OPENAI_API_KEY =
+
+[cohere]
+COHERE_API_KEY =
