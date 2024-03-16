@@ -142,10 +142,10 @@ for i, file in enumerate(grouped_files):
 
 
 # Save the results in a pickle
-with open(os.path.join(FEATURES_PATH, "simple_files_results.pkl"), "wb") as file:
+with open(os.path.join(FEATURES_PATH, "simple_files_extractions.pkl"), "wb") as file:
     pickle.dump(sf_results, file)
 
-with open(os.path.join(FEATURES_PATH, "grouped_files_results.pkl"), "wb") as file:
+with open(os.path.join(FEATURES_PATH, "grouped_files_extractions.pkl"), "wb") as file:
     pickle.dump(gf_results, file)
 
 print("Done!")
