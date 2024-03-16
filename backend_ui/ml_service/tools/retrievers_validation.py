@@ -48,7 +48,7 @@ class SearchKwargs(BaseModel):
     filter: Optional[Filter]
 
 
-def validate_input(kwargs: Dict[str, Any]) -> Dict[str, Any]:
+def validate_search_kwargs(kwargs: Dict[str, Any]) -> Dict[str, Any]:
     
     
     # check if kwargs has the attribute filter

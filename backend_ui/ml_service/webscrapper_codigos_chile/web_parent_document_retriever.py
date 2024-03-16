@@ -16,6 +16,8 @@ def obtain_parentdocument_retriever(docs):
     child_splitter = CharacterTextSplitter.from_tiktoken_encoder(
         chunk_size=100, chunk_overlap=20
     )
+    
+    parrent_splitter = []
 
     emb = Embeddings()
     embeddings = emb.obtain_embeddings("openai_embeddings")

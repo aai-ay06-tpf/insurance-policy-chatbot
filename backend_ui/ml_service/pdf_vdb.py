@@ -1,5 +1,5 @@
 from ml_service.pdf_init_feature.pdf_vectorstore import obtain_vectorstore_from_client
-from ml_service.tools.retrievers_validation import validate_input
+from ml_service.tools.retrievers_validation import validate_search_kwargs
 
 
 def qdrant_retriever(search_type="similarity", kwargs=None):
@@ -18,7 +18,7 @@ def qdrant_retriever(search_type="similarity", kwargs=None):
     vectorstore = obtain_vectorstore_from_client()
 
     if kwargs:
-        kwargs = validate_input(kwargs)
+        kwargs = validate_search_kwargs(kwargs)
         return vectorstore.as_retriever(search_type=search_type, search_kwargs=kwargs)
 
     return vectorstore.as_retriever(search_type=search_type)
