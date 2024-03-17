@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=grouped_feature_files,
+        chunks=init_feature,
         embedding_label=embedding_label,
         collection_prefix=f"init_pdf_feature_{int(time.time())}"
     )
