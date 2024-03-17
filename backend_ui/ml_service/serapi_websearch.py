@@ -1,4 +1,4 @@
-from langchain_community.utilities import SerpAPIWrapper
+from langchain_community.utilities.serpapi import SerpAPIWrapper
 from langchain.agents import Tool
 
 params = {
