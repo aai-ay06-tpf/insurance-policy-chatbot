@@ -5,7 +5,7 @@ from copy import copy
 from ml_service.webscrapper_codigos_chile import web_documents, web_vectorstore
 from ml_service.webscrapper_codigos_chile.web_parent_document_retriever import obtain_parentdocument_retriever
 
-from ml_service.tools.retrievers_validation import validate_input
+from ml_service.tools.retrievers_validation import validate_search_kwargs
 
 
 # For running the function in parallel
@@ -54,7 +54,7 @@ def qdrant_retriever(searchs, search_type="similarity", kwargs=None):
     vectorstore = web_vectorstore.obtain_vectorstore_from_docs(all_docs)
 
     if kwargs:
-        kwargs = validate_input(kwargs)
+        kwargs = validate_search_kwargs(kwargs)
         return vectorstore.as_retriever(search_type=search_type, search_kwargs=kwargs)
 
     return vectorstore.as_retriever(search_type=search_type)

@@ -55,45 +55,17 @@ if __name__ == "__main__":
     embedding_label = "openai_embeddings"
 
     # LOAD ALL THE FEATURES
-    feature_files_path = os.path.join(FEATURES_PATH, "feature_files.pkl")
-    feature_articles_path = os.path.join(FEATURES_PATH, "feature_articles.pkl")
+    feature_files_path = os.path.join(FEATURES_PATH, "final_features.pkl")
 
     with open(feature_files_path, "rb") as file:
         feature_files = pickle.load(file)
 
-    with open(feature_articles_path, "rb") as file:
-        feature_articles = pickle.load(file)
-
-    feature_files_path = os.path.join(
-        FEATURES_PATH, "grouped_feature_files.pkl")
-    feature_articles_path = os.path.join(
-        FEATURES_PATH, "grouped_feature_articles.pkl")
-
-    with open(feature_files_path, "rb") as file:
-        grouped_feature_files = pickle.load(file)
-
-    with open(feature_articles_path, "rb") as file:
-        grouped_feature_articles = pickle.load(file)
-
-    # MERGE THE FEATURES OBTAINED
-
-    merge_1 = list(zip(feature_files, feature_articles))
-    merge_2 = list(zip(grouped_feature_files, grouped_feature_articles))
-
-    init_feature = []
-    for pdf in merge_1:
-        init_feature += [pdf[0]] + pdf[1]
-    for policy in merge_2:
-        init_feature += [policy[0]] + policy[1]
-
-    with open(os.path.join(FEATURES_PATH, "init_feature.pkl"), "wb") as file:
-        pickle.dump(init_feature, file)
 
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=grouped_feature_files,
+        chunks=feature_files,
         embedding_label=embedding_label,
-        collection_prefix=f"init_pdf_feature_{int(time.time())}"
+        collection_prefix=f"final_pdf_feature_{int(time.time())}"
     )
 
     end = time.time()
