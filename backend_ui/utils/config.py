@@ -21,5 +21,9 @@ QDRANT_PORT = env_config.get('qdrant', 'QDRANT_PORT')
 QDRANT_URL = env_config.get('qdrant', 'QDRANT_URL')
 QDRANT_LOCAL_PATH = os.path.join(ROOT_PATH, "qdrant_collections")
 
+# Pickle serialized features path
+FEATURES_PATH = os.path.join(SERVICE_PATH, '.serialized_features')
+os.makedirs(FEATURES_PATH, exist_ok=True)
+
 
 
