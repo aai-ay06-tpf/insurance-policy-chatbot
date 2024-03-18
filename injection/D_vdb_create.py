@@ -40,7 +40,8 @@ def create_vector_db(
             url=QDRANT_URL,
             prefer_grpc=True,
             collection_name=f"{collection_prefix}_{emb.get_current()}"
-        )
+        )        
+        
     except Exception as e:
         print(e)
         print()
@@ -93,7 +94,7 @@ if __name__ == "__main__":
     create_vector_db(
         chunks=grouped_feature_files,
         embedding_label=embedding_label,
-        collection_prefix=f"init_pdf_feature_{int(time.time())}"
+        collection_prefix="pdf_init_feature"
     )
 
     end = time.time()

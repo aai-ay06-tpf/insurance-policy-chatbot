@@ -65,7 +65,7 @@ if __name__ == "__main__":
     create_vector_db(
         chunks=feature_files,
         embedding_label=embedding_label,
-        collection_prefix=f"final_pdf_feature_{int(time.time())}"
+        collection_prefix="pdf_final_feature"
     )
 
     end = time.time()

@@ -38,6 +38,7 @@ features = remove_stopwords(preprocessing)
 # build again the 
 feature_contents = []
 ci = 0
+
 for policy in all_data:
     for article in policy:
         if "_" in article[1]:
@@ -49,7 +50,7 @@ for policy in all_data:
 
         policy_header = article[0]
         article_title = article[2]
-        page_content = features[ci]
+        page_content = article_title + ' \n ' + features[ci]
         ci += 1
 
         feature_contents.append(
