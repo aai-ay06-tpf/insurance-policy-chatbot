@@ -3,19 +3,15 @@ import ast
 
 
 import chainlit as cl
-from ml_service.conversational_rag import main_chain
+from agent import create_agent
 
 
-# @cl.password_auth_callback
-# def auth_callback(username: str, password: str):
-#     # Fetch the user matching username from your database
-#     # and compare the hashed password with the value stored in the database
-#     if (username, password) == ("admin", "admin"):
-#         return cl.User(
-#             identifier="admin", metadata={"role": "admin", "provider": "credentials"}
-#         )
-#     else:
-#         return None
+
+chat_history = []
+def _chat_history(result):
+    global chat_history
+    chat_history.extend([(result["input"], result["output"])])
+    return chat_history
 
 
 @cl.on_chat_start
@@ -25,8 +21,8 @@ async def init():
     await msg.send()
 
     # Chain
-    chain = main_chain()
-    cl.user_session.set("chain", chain)
+    agent = create_agent()
+    cl.user_session.set("agent", agent)
 
     msg.content = f"Chat loaded. You can now ask questions!"
     await msg.update()
@@ -34,20 +30,25 @@ async def init():
 
 @cl.on_message
 async def main(message: cl.Message):
-
+    global chat_history
+    
     # Get the user session
-    chain = cl.user_session.get("chain")
+    agent = cl.user_session.get("agent")
 
+    if len(chat_history) != 0:
+        optmizar_el_prompt_del_user_con_el_chat_history = None
+    
     # Make the prediction
-    response = chain.invoke({"question": message.content})
-    result = ast.literal_eval(response["answer"])
-    answer = result.get("answer")
-    sources = result.get("sources")
+    result = agent.invoke({"input": message.content, "chat_history": chat_history})
+    chat_history = _chat_history(result)
+    answer = result.get("output")
+    tool = result["intermediate_steps"][0][0].tool
+    source = result["intermediate_steps"][0][1]
 
     # # Embed the answer in a message with the sources metadata
     # sources_found = []
     # sources_elements = []
-    # if sources:#TODO: def obtain_sources_elements(sources)
+    # if sources:
     #     for source in sources:
     #         try:
     #             source_name = sources.metadata["source"]
