@@ -2,7 +2,7 @@ from langchain.tools.retriever import create_retriever_tool
 from langchain_community.utilities.serpapi import SerpAPIWrapper
 from langchain.agents import Tool
 
-from backend_ui.ml_service.webscrapper_codigos_chile.webscrapper_app import qdrant_retriever as ccr
+from ml_service.webscrapper_codigos_chile.webscrapper_app import qdrant_retriever as ccr
 from ml_service.qdrant_vectorstore.vectorstore_funcs import (
     obtain_vectorstore_from_client,
     obtain_llm_multiquery_retriever,
@@ -16,12 +16,14 @@ def init_feature_tool():
     search_type = "mmr"
     search_kwargs = {"k": 3, "lambda_mult": 0.25}
     
-    embedding_name = "openai_embeddings",
+    embedding_name = "openai_embeddings"
     collection_name = "pdf_init_feature_openai_embeddings"
     
     pdf_retriever = qdrant_retriever(
-        embedding_name, collection_name,
-        search_type, search_kwargs
+        embedding_name=embedding_name,
+        collection_name=collection_name,
+        search_type=search_type,
+        search_kwargs=search_kwargs
     )
 
     init_tool = create_retriever_tool(
@@ -37,12 +39,14 @@ def final_feature_tool():
     search_type = "mmr"
     search_kwargs = {"k": 3, "lambda_mult": 0.25}
     
-    embedding_name = "openai_embeddings",
+    embedding_name = "openai_embeddings"
     collection_name = "pdf_final_feature_openai_embeddings"
     
     pdf_retriever = qdrant_retriever(
-        embedding_name, collection_name,
-        search_type, search_kwargs
+        embedding_name=embedding_name,
+        collection_name=collection_name,
+        search_type=search_type,
+        search_kwargs=search_kwargs
     )
 
     pdf_tool = create_retriever_tool(

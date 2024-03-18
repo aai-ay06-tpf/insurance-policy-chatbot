@@ -23,8 +23,8 @@ from langchain_core.tools import BaseTool
 from ml_service.agent_tools import init_feature_tool, final_feature_tool
 from ml_service.tools.embeddings import Embeddings
 
-init_tool = init_feature_tool()
 pdf_tool = final_feature_tool()
+init_tool = init_feature_tool()
 
 
 def create_agent():

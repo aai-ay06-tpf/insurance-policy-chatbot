@@ -28,12 +28,8 @@ def obtain_vectorstore_from_client(
     return qdrant
 
 
-def qdrant_retriever(
-    embedding_name: str,
-    collection_name: str,
-    search_type: str = "mmr",
-    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25}
-):
+def qdrant_retriever(embedding_name: str, collection_name: str, search_type: str = "mmr",
+    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25}):
     """
     Params:
         - search_type: Can be "similarity" (default), "mmr", or "similarity_score_threshold".
@@ -45,10 +41,7 @@ def qdrant_retriever(
                 - filter: A dictionary with the fields and values to filter the documents metadata.
     """
 
-    vectorstore = obtain_vectorstore_from_client(
-        embedding_name=embedding_name,
-        collection_name=collection_name
-    )
+    vectorstore = obtain_vectorstore_from_client(embedding_name,collection_name)
 
     if search_kwargs:
         search_kwargs = validate_search_kwargs(search_kwargs)
