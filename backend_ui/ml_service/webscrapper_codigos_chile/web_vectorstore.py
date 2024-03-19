@@ -2,7 +2,7 @@ from langchain_community.vectorstores.qdrant import Qdrant
 from ml_service.tools.embeddings import Embeddings
 
 emb = Embeddings()
-embeddings = emb.obtain_embeddings('openai_embeddings')
+embeddings = emb.obtain_embeddings("openai_embeddings")
 
 
 def obtain_vectorstore_from_docs(documents: list) -> Qdrant:

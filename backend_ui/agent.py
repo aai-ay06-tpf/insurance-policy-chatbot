@@ -5,7 +5,9 @@ from langchain.agents import (
     AgentExecutor,
     Tool,
 )
-from langchain.agents.format_scratchpad.openai_functions import format_to_openai_function_messages
+from langchain.agents.format_scratchpad.openai_functions import (
+    format_to_openai_function_messages,
+)
 from langchain_core.utils.function_calling import convert_to_openai_function
 from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
 
@@ -20,16 +22,23 @@ from langchain_core.prompts import (
 from langchain_core.runnables import Runnable, RunnableLambda, RunnableParallel
 from langchain_core.tools import BaseTool
 
-from ml_service.agent_tools import init_feature_tool, final_feature_tool
+from ml_service.agent_tools import (
+    init_feature_tool,
+    final_feature_tool,
+    web_news_tool,
+    retriever_tool_constitucion_chile,
+)
 from ml_service.tools.embeddings import Embeddings
 
 pdf_tool = final_feature_tool()
 init_tool = init_feature_tool()
+news_tool = web_news_tool()
+cl_constit_tool = retriever_tool_constitucion_chile()
 
 
 def create_agent():
     # TOOLS AND RETRIEVER TOOLS SET UP
-    ALL_TOOLS: List[BaseTool] = [init_tool, pdf_tool]
+    ALL_TOOLS: List[BaseTool] = [init_tool, pdf_tool, news_tool, cl_constit_tool]
 
     tool_docs = [
         Document(page_content=t.description, metadata={"index": i})
@@ -45,7 +54,7 @@ def create_agent():
         location=":memory:",
         collection_name="agent_tools_documents",
     )
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
     def get_tools(query: str) -> List[Tool]:
         docs = retriever.get_relevant_documents(query)
@@ -55,7 +64,9 @@ def create_agent():
     # ERROR el prompt está después del retriever
     assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
     Usa la tool 'pdf_init_feature' para adquirir contexto básico de cada poliza o de cada articulo.
-    La tool 'pdf_final_feature' es la herramienta principal para buscar informacion completa sobre los articulos de polizas.
+    La tool 'pdf_final_feature' devuelve 2 articulos completos, selecciona uno.
+    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."
+    'constit_tool' informacion legal respecto a las leyes de Chile.
     """
 
     prompt = ChatPromptTemplate.from_messages(
@@ -69,11 +80,14 @@ def create_agent():
 
     # AGENT SET UP
 
-    llm = ChatOpenAI(temperature=0.0, model="gpt-3.5-turbo-0125",
-                    api_key=os.getenv("OPENAI_API_KEY"))
+    llm = ChatOpenAI(
+        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY")
+    )
 
     def llm_with_tools(input: Dict) -> Runnable:
-        return RunnableLambda(lambda x: x["input"]) | llm.bind_functions(input["functions"])
+        return RunnableLambda(lambda x: x["input"]) | llm.bind_functions(
+            input["functions"]
+        )
 
     def _format_chat_history(chat_history: List[Tuple[str, str]]):
         buffer = []
@@ -89,7 +103,8 @@ def create_agent():
                 "input": lambda x: x["input"],
                 "chat_history": lambda x: _format_chat_history(x["chat_history"]),
                 "agent_scratchpad": lambda x: format_to_openai_function_messages(
-                    x["intermediate_steps"]),
+                    x["intermediate_steps"]
+                ),
                 "functions": lambda x: [
                     convert_to_openai_function(tool) for tool in get_tools(x["input"])
                 ],
@@ -104,6 +119,7 @@ def create_agent():
     )
 
     agent_executor = AgentExecutor(
-        agent=agent, tools=ALL_TOOLS, return_intermediate_steps=True)
+        agent=agent, tools=ALL_TOOLS, return_intermediate_steps=True
+    )
 
     return agent_executor
