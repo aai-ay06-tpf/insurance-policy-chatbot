@@ -54,14 +54,14 @@ def main():
     embedding_label = "openai_embeddings"
 
     # LOAD ALL THE FEATURES
-    feature_files_path = os.path.join(FEATURES_PATH, "final_features.pkl")
+    final_features_path = os.path.join(FEATURES_PATH, "final_features.pkl")
 
-    with open(feature_files_path, "rb") as file:
-        feature_files = pickle.load(file)
+    with open(final_features_path, "rb") as file:
+        final_features = pickle.load(file)
 
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=feature_files,
+        chunks=final_features,
         embedding_label=embedding_label,
         collection_prefix="pdf_final_feature",
     )
