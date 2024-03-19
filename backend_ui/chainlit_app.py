@@ -3,6 +3,8 @@ from agent import create_agent
 
 
 chat_history = []
+
+
 def _chat_history(result):
     global chat_history
     chat_history.extend([(result["input"], result["output"])])
@@ -26,27 +28,22 @@ async def init():
 @cl.on_message
 async def main(message: cl.Message):
     global chat_history
-    
+
     # Get the user session
     agent = cl.user_session.get("agent")
 
     # Set up the streaming callback
-    cb = cl.AsyncLangchainCallbackHandler(
-        stream_final_answer=True
-    )
+    cb = cl.AsyncLangchainCallbackHandler(stream_final_answer=True)
     cb.answer_reached = True
-    
-    config = {
-        "callbacks": [cb]
-    }
+
+    config = {"callbacks": [cb]}
 
     # Make the prediction
     result = await agent.ainvoke(
-        {"input": message.content, "chat_history": chat_history},
-        config=config
+        {"input": message.content, "chat_history": chat_history}, config=config
     )
     chat_history = _chat_history(result)
-    
+
     # # Embed the answer in a message with the sources metadata
     source_links = []
     source_elements = []
@@ -54,18 +51,14 @@ async def main(message: cl.Message):
         for tool in result["intermediate_steps"]:
             source_link = tool[0].tool + "_link"
             source_links.append(source_link)
-            source_elements.append(
-                cl.Text(content=tool[1], name=source_link)
-            )
+            source_elements.append(cl.Text(content=tool[1], name=source_link))
     except:
         raise Exception("Error al obtener las fuentes")
-
 
     if source_links:
         answer = f"\n\nSources: {', '.join(source_links)}"
     else:
         answer = "\n\nNo sources found."
-
 
     # Send a response back to the user
     msg = cl.Message(content=answer, elements=source_elements)

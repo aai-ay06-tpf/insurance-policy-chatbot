@@ -5,7 +5,9 @@ from langchain.agents import (
     AgentExecutor,
     Tool,
 )
-from langchain.agents.format_scratchpad.openai_functions import format_to_openai_function_messages
+from langchain.agents.format_scratchpad.openai_functions import (
+    format_to_openai_function_messages,
+)
 from langchain_core.utils.function_calling import convert_to_openai_function
 from langchain.agents.output_parsers import OpenAIFunctionsAgentOutputParser
 
@@ -24,7 +26,7 @@ from ml_service.agent_tools import (
     init_feature_tool,
     final_feature_tool,
     web_news_tool,
-    retriever_tool_constitucion_chile
+    retriever_tool_constitucion_chile,
 )
 from ml_service.tools.embeddings import Embeddings
 
@@ -78,11 +80,14 @@ def create_agent():
 
     # AGENT SET UP
 
-    llm = ChatOpenAI(temperature=0.0, model="gpt-3.5-turbo-0125",
-                    api_key=os.getenv("OPENAI_API_KEY"))
+    llm = ChatOpenAI(
+        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY")
+    )
 
     def llm_with_tools(input: Dict) -> Runnable:
-        return RunnableLambda(lambda x: x["input"]) | llm.bind_functions(input["functions"])
+        return RunnableLambda(lambda x: x["input"]) | llm.bind_functions(
+            input["functions"]
+        )
 
     def _format_chat_history(chat_history: List[Tuple[str, str]]):
         buffer = []
@@ -98,7 +103,8 @@ def create_agent():
                 "input": lambda x: x["input"],
                 "chat_history": lambda x: _format_chat_history(x["chat_history"]),
                 "agent_scratchpad": lambda x: format_to_openai_function_messages(
-                    x["intermediate_steps"]),
+                    x["intermediate_steps"]
+                ),
                 "functions": lambda x: [
                     convert_to_openai_function(tool) for tool in get_tools(x["input"])
                 ],
@@ -113,6 +119,7 @@ def create_agent():
     )
 
     agent_executor = AgentExecutor(
-        agent=agent, tools=ALL_TOOLS, return_intermediate_steps=True)
+        agent=agent, tools=ALL_TOOLS, return_intermediate_steps=True
+    )
 
     return agent_executor
