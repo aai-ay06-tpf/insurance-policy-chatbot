@@ -239,14 +239,23 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
     feature_files = []
     for i in range(len(first_policy_headers)):
         headers = [first_policy_headers[i]] + middle_policies_header[i]
-        file_content_hip = [": ".join(element)
-                            for element in list(zip(headers, articles[i]))]
         policy_names = [first_policy_names[i]] + middle_policies_names[i]
+        
+        # primera parte del page_content
+        # file_content_hip = [": ".join(element)
+        #                     for element in list(zip(headers, articles[i]))]
+        page_content = ["`{'poliza': '" + 
+                    header.lower() +
+                    "', 'articulos': '" +
+                    article.lower() for article, header in zip(articles[i], headers)]
 
         for j in range(len(policy_names)):
+            # agregar la parte que falta del page_content_i
+            page_content[j] += "', 'filename': '" + policy_names[0] + ".pdf', 'poliza_id': '" + policy_names[j] + "'}`"
+                
             feature_files.append(
                 Document(
-                    page_content=file_content_hip[j].lower(),
+                    page_content=page_content[j],
                     metadata={
                         "file": f"{policy_names[0]}_{policy_names[j]}",
                         "policy_header": headers[j]
@@ -288,9 +297,24 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 article_name = re.sub(r"\s+", " ", article_name).strip()
                 content = re.sub(r"\\t", " ", content)
                 content = re.sub(r"\s+", " ", content)
+                
+                article_name = preprocess_non_printable_characters(article_name)
+                content = preprocess_non_printable_characters(content)
+                
+                page_content = "`{'poliza': '" +\
+                    headers[j].lower().strip() +\
+                    "', 'articulo': '" +  \
+                    article_name +\
+                    "', 'introduccion': '" +\
+                    content +\
+                    "', 'filename': '" +\
+                    policy_names[0] + ".pdf" +\
+                    "', 'poliza_id': '" +\
+                    policy_names[j] + "'}`"
+                
                 features.append(
                     Document(
-                        page_content = preprocess_non_printable_characters(article_name + ": " + content),
+                        page_content = page_content,
                         metadata={
                             "file": policy_name,
                             "policy_header": headers[j],

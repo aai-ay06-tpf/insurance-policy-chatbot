@@ -112,8 +112,15 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
 
     policy_headers = obtain_policy_headers(batch_files, extractions)
 
-    features = [f"{header.lower()}: {article}" for article,
-                header in zip(articles, policy_headers)]
+    features = ["```{'poliza': '" + 
+                header.lower() +
+                "', 'articulos': '" +
+                article  +
+                "', 'filename': '" +
+                filenames[i] +
+                ".pdf', 'poliza_id': '" +
+                filenames[i] +
+                "'}```" for i, (article, header) in enumerate(zip(articles, policy_headers))]
 
     return [Document(page_content=feature, metadata={"file": filenames[i], "policy_header": policy_headers[i]}) for i, feature in enumerate(features)]
 
@@ -153,8 +160,25 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
         for j, content in enumerate(content_list):
             batch.append(
                 Document(
-                    page_content = re.sub(batch_files[i][1], "", extractions[i][j]).strip().lower() +\
-                        ": " + content,
+                    page_content = 
+                    
+                    "```{'poliza': '" +
+                    policy_headers[i].lower().strip()   +
+                    
+                    "', 'articulo': '" +  
+                    re.sub(batch_files[i][1], "", extractions[i][j]).strip().lower() +
+                    
+                    "', 'introduccion': '" +  
+                    content +
+                    
+                    "', 'filename': '" +  
+                    filenames[i] + ".pdf" +
+                    
+                    "', 'poliza_id': '" +  
+                    filenames[i] 
+                    + "'}```"
+                    ,
+                    
                     metadata = {
                         "file": filenames[i],
                         "policy_header": policy_headers[i],

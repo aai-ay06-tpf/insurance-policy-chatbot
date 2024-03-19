@@ -1,6 +1,6 @@
 [qdrant]
-QDRANT_URL = http://localhost:6333
-QDRANT_HOST = localhost
+QDRANT_URL = http://qdrant:6333 # replace for 'localhost' for local development
+QDRANT_HOST = qdrant
 QDRANT_PORT = 6333
 
 [openai]

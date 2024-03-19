@@ -22,6 +22,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
+    volumes:
+      - ./backend_ui:/app
     depends_on:
       - qdrant
 
