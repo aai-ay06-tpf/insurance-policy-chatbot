@@ -19,7 +19,7 @@ When you're ready, start the vector database by running:
 
 ### Create the vector database collections
 
-First you have to create a `.env` file inside the injection directory. Follow the `raw_env.txt` file guide.
+First, you have to create a `.env` file inside the injection directory. Follow the `raw_env.txt` file guide.
 After creating the `injection/.env` file you can load the document/vectors collections, run the following files from the `injection` directory:
 
 1. `cd injection`
@@ -36,6 +36,14 @@ After creating the `injection/.env` file you can load the document/vectors colle
 
 The collection names have the timestamp of the last created collection. 
 If you want to verify the collection names, you can do so in the `...` file.
+
+
+### Build and run the Chat service
+
+First, you have to create a `.env` file inside the backend_ui directory. Follow the `raw_env.txt` file guide.
+After creating the `backend_ui/.env`y, start the chat interface by running:
+`docker compose up backend_ui --build `.
+
 
 ### Run the app
 
