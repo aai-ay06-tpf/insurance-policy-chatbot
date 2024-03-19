@@ -6,9 +6,10 @@ from typing import Callable
 
 from langchain_core.documents.base import Document
 from eda_tools.pdf_file_tools import (
-    extract_patterns, extract_text,
+    extract_patterns,
+    extract_text,
     remove_pattern_from_lines,
-    obtain_header_paragraphs
+    obtain_header_paragraphs,
 )
 from utils.config import DOWNLOAD_PATH, FEATURES_PATH
 
@@ -40,10 +41,11 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
             # Once the file was added there is no need to check with other arguments
             if selected_file in (batch[0] for batch in batch_files):
                 continue
-            
+
             # Function Execution
             patterns = func(selected_file, arg)
-            for pattern in patterns: print(pattern)
+            for pattern in patterns:
+                print(pattern)
 
             # UI Context
             filename = os.path.basename(selected_file).replace(".pdf", "")
@@ -61,13 +63,15 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
 
 def obtain_policy_headers(batch_files: list, extractions: list) -> list:
     texts = [extract_text(file) for file, _ in batch_files]
-    policy_headers = [text[:text.find(extractions[i][0])].replace(
-        "\n", " ") for i, text in enumerate(texts)]
+    policy_headers = [
+        text[: text.find(extractions[i][0])].replace("\n", " ")
+        for i, text in enumerate(texts)
+    ]
     cleaned_policy_headers = []
     for header in policy_headers:
         new_header = []
         # use `re` for removing doble spaces
-        header = re.sub(r'\s+', ' ', header)
+        header = re.sub(r"\s+", " ", header)
         # Tokenize the header and keep only the uppercase words
         for word in header.split(" "):
             if word.isupper() and word.isalpha():
@@ -89,27 +93,42 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
     List[Document]: A list of langchain Documents.
     """
 
-    filenames = [os.path.basename(filename).replace(
-        ".pdf", "") for filename, _ in batch_files]
+    filenames = [
+        os.path.basename(filename).replace(".pdf", "") for filename, _ in batch_files
+    ]
 
     extractions = [func(file, pattern) for file, pattern in batch_files]
 
-    articles = [", ".join(element).lower() for element in [remove_pattern_from_lines(
-        extraction, pattern) for extraction, (_, pattern) in zip(extractions, batch_files)]]
+    articles = [
+        ", ".join(element).lower()
+        for element in [
+            remove_pattern_from_lines(extraction, pattern)
+            for extraction, (_, pattern) in zip(extractions, batch_files)
+        ]
+    ]
 
     policy_headers = obtain_policy_headers(batch_files, extractions)
 
-    features = ["```{'poliza': '" + 
-                header.lower() +
-                "', 'articulos': '" +
-                article  +
-                "', 'filename': '" +
-                filenames[i] +
-                ".pdf', 'poliza_id': '" +
-                filenames[i] +
-                "'}```" for i, (article, header) in enumerate(zip(articles, policy_headers))]
+    features = [
+        "```{'poliza': '"
+        + header.lower()
+        + "', 'articulos': '"
+        + article
+        + "', 'filename': '"
+        + filenames[i]
+        + ".pdf', 'poliza_id': '"
+        + filenames[i]
+        + "'}```"
+        for i, (article, header) in enumerate(zip(articles, policy_headers))
+    ]
 
-    return [Document(page_content=feature, metadata={"file": filenames[i], "policy_header": policy_headers[i]}) for i, feature in enumerate(features)]
+    return [
+        Document(
+            page_content=feature,
+            metadata={"file": filenames[i], "policy_header": policy_headers[i]},
+        )
+        for i, feature in enumerate(features)
+    ]
 
 
 def create_feature_article(batch_files: list, func: Callable) -> list:
@@ -125,49 +144,47 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
     List[ List[Document] ]: A list of lists of langchain Documents.
     """
 
-    filenames = [os.path.basename(filename).replace(
-        ".pdf", "") for filename, _ in batch_files]
+    filenames = [
+        os.path.basename(filename).replace(".pdf", "") for filename, _ in batch_files
+    ]
 
     extractions = [func(file, pattern) for file, pattern in batch_files]
 
     splitted_text = [extract_text(file).splitlines() for file, _ in batch_files]
 
-    contents = [obtain_header_paragraphs(
-        text, extraction) for text, extraction in zip(splitted_text, extractions)]
+    contents = [
+        obtain_header_paragraphs(text, extraction)
+        for text, extraction in zip(splitted_text, extractions)
+    ]
 
     policy_headers = obtain_policy_headers(batch_files, extractions)
 
     features = []
-    
+
     for i, content_list in enumerate(contents):
         batch = []
         for j, content in enumerate(content_list):
             batch.append(
                 Document(
-                    page_content = 
-                    
-                    "```{'poliza': '" +
-                    policy_headers[i].lower().strip()   +
-                    
-                    "', 'articulo': '" +  
-                    re.sub(batch_files[i][1], "", extractions[i][j]).strip().lower() +
-                    
-                    "', 'introduccion': '" +  
-                    content +
-                    
-                    "', 'filename': '" +  
-                    filenames[i] + ".pdf" +
-                    
-                    "', 'poliza_id': '" +  
-                    filenames[i] 
-                    + "'}```"
-                    ,
-                    
-                    metadata = {
+                    page_content="```{'poliza': '"
+                    + policy_headers[i].lower().strip()
+                    + "', 'articulo': '"
+                    + re.sub(batch_files[i][1], "", extractions[i][j]).strip().lower()
+                    + "', 'introduccion': '"
+                    + content
+                    + "', 'filename': '"
+                    + filenames[i]
+                    + ".pdf"
+                    + "', 'poliza_id': '"
+                    + filenames[i]
+                    + "'}```",
+                    metadata={
                         "file": filenames[i],
                         "policy_header": policy_headers[i],
-                        "article": extractions[i][j]}
-                ))
+                        "article": extractions[i][j],
+                    },
+                )
+            )
         features.append(batch)
 
     return features

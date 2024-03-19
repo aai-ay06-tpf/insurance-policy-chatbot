@@ -31,17 +31,12 @@ prompt = PromptTemplate.from_template(prompt_template)
 
 # Define LLM chain
 llm = ChatOpenAI(
-    temperature=0,
-    model_name="gpt-3.5-turbo-16k",
-    api_key=os.getenv("OPENAI_API_KEY")
-    )
+    temperature=0, model_name="gpt-3.5-turbo-16k", api_key=os.getenv("OPENAI_API_KEY")
+)
 llm_chain = LLMChain(llm=llm, prompt=prompt)
 
 # Define StuffDocumentsChain
-stuff_chain = StuffDocumentsChain(
-    llm_chain=llm_chain,
-    document_variable_name="text"
-)
+stuff_chain = StuffDocumentsChain(llm_chain=llm_chain, document_variable_name="text")
 
 
 docs = loader.load()

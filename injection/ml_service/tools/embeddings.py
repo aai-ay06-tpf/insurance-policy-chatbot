@@ -13,7 +13,6 @@ Warning: some models require an API key, and also, libraries installed in the en
 
 """
 
-
 import os
 from enum import Enum
 from dotenv import load_dotenv
@@ -23,11 +22,13 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_community.embeddings.gpt4all import GPT4AllEmbeddings
 from langchain_community.embeddings.cohere import CohereEmbeddings
 from langchain_community.embeddings.huggingface import (
-    HuggingFaceEmbeddings, HuggingFaceBgeEmbeddings
+    HuggingFaceEmbeddings,
+    HuggingFaceBgeEmbeddings,
 )
 
 
 load_dotenv()
+
 
 # new model: https://platform.openai.com/docs/guides/embeddings/
 # text-embedding-3-small and text-embedding-3-large,
@@ -47,7 +48,7 @@ class EmbeddingsModels(Enum):
     OPENAI = "text-embedding-3-large"
 
 
-class Embeddings():
+class Embeddings:
 
     def __init__(self):
         self._embeddings = [emb_label.value for emb_label in EmbeddingsLabels]
@@ -61,7 +62,9 @@ class Embeddings():
         return self._current
 
     def set_current(self, emb_label):
-        assert emb_label in self._embeddings, f"Invalid embeddings label: {emb_label}, use `get_embeddings()`"
+        assert (
+            emb_label in self._embeddings
+        ), f"Invalid embeddings label: {emb_label}, use `get_embeddings()`"
         self._current = emb_label
 
     def obtain_embeddings(self, emb_label=None):
@@ -81,12 +84,12 @@ class Embeddings():
             return self.openai_embeddings()
         else:
             raise ValueError(
-                f"Invalid embeddings label: {emb_label}, use `set_current`")
+                f"Invalid embeddings label: {emb_label}, use `set_current`"
+            )
 
     def ada_embeddings(self):
         return OpenAIEmbeddings(
-            model=EmbeddingsModels.ADA.value,
-            api_key=os.getenv("OPENAI_API_KEY")
+            model=EmbeddingsModels.ADA.value, api_key=os.getenv("OPENAI_API_KEY")
         )
 
     def gpt4all_embeddings(self):
@@ -94,18 +97,16 @@ class Embeddings():
 
     def sbert_embeddings(self):
         return HuggingFaceEmbeddings(
-            model_name=EmbeddingsModels.SBERT.value,
-            model_kwargs={"device": "cpu"}
+            model_name=EmbeddingsModels.SBERT.value, model_kwargs={"device": "cpu"}
         )
 
     def cohere_embeddings(self):
         return CohereEmbeddings(
             model=EmbeddingsModels.COHERE.value,
-            cohere_api_key=os.getenv("COHERE_API_KEY")
+            cohere_api_key=os.getenv("COHERE_API_KEY"),
         )
-        
+
     def openai_embeddings(self):
         return OpenAIEmbeddings(
-            model=EmbeddingsModels.OPENAI.value,
-            api_key=os.getenv("OPENAI_API_KEY")
+            model=EmbeddingsModels.OPENAI.value, api_key=os.getenv("OPENAI_API_KEY")
         )

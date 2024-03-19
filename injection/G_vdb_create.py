@@ -39,7 +39,7 @@ def create_vector_db(
             embedding=embedding,
             url=QDRANT_URL,
             prefer_grpc=True,
-            collection_name=f"{collection_prefix}_{emb.get_current()}"
+            collection_name=f"{collection_prefix}_{emb.get_current()}",
         )
     except Exception as e:
         print(e)
@@ -59,12 +59,11 @@ def main():
     with open(feature_files_path, "rb") as file:
         feature_files = pickle.load(file)
 
-
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
         chunks=feature_files,
         embedding_label=embedding_label,
-        collection_prefix="pdf_final_feature"
+        collection_prefix="pdf_final_feature",
     )
 
     end = time.time()

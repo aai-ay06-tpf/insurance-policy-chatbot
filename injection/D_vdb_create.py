@@ -39,9 +39,9 @@ def create_vector_db(
             embedding=embedding,
             url=QDRANT_URL,
             prefer_grpc=True,
-            collection_name=f"{collection_prefix}_{emb.get_current()}"
-        )        
-        
+            collection_name=f"{collection_prefix}_{emb.get_current()}",
+        )
+
     except Exception as e:
         print(e)
         print()
@@ -65,10 +65,8 @@ def main():
     with open(feature_articles_path, "rb") as file:
         feature_articles = pickle.load(file)
 
-    feature_files_path = os.path.join(
-        FEATURES_PATH, "grouped_feature_files.pkl")
-    feature_articles_path = os.path.join(
-        FEATURES_PATH, "grouped_feature_articles.pkl")
+    feature_files_path = os.path.join(FEATURES_PATH, "grouped_feature_files.pkl")
+    feature_articles_path = os.path.join(FEATURES_PATH, "grouped_feature_articles.pkl")
 
     with open(feature_files_path, "rb") as file:
         grouped_feature_files = pickle.load(file)
@@ -80,7 +78,7 @@ def main():
 
     merge_1 = list(zip(feature_files, feature_articles))
     merge_2 = list(zip(grouped_feature_files, grouped_feature_articles))
-    
+
     # Should we?
     # final_feature_file = feature_files + feature_articles
     # final_feature_article = grouped_feature_files + grouped_feature_articles
@@ -96,9 +94,9 @@ def main():
 
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=init_feature,# it was on grouped_feature_files
+        chunks=init_feature,  # it was on grouped_feature_files
         embedding_label=embedding_label,
-        collection_prefix="pdf_init_feature"
+        collection_prefix="pdf_init_feature",
     )
 
     end = time.time()

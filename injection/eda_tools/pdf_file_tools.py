@@ -5,14 +5,14 @@ from pypdf import PdfReader
 def extract_text(file_path: str) -> str:
     """Return the text of a PDF file as a single string."""
     reader = PdfReader(file_path)
-    text = ''.join('\n'.join(page.extract_text() for page in reader.pages))
+    text = "".join("\n".join(page.extract_text() for page in reader.pages))
     return text
 
 
 def extract_patterns(file_path: str, pattern: str) -> list:
     """Extract the whole lines from a PDF file in which the specified pattern is found."""
     text = extract_text(file_path)
-    lines = text.split('\n')
+    lines = text.split("\n")
     matches = [line.replace(".", "") for line in lines if re.search(pattern, line)]
     return matches
 
@@ -33,8 +33,8 @@ def remove_pattern_from_lines(lines: list, pattern: str) -> list:
 
     cleaned_lines = []
     for line in lines:
-        cleaned_line = re.sub(pattern, '', line).strip()
-        cleaned_line = re.sub(r'\s+', ' ', cleaned_line)
+        cleaned_line = re.sub(pattern, "", line).strip()
+        cleaned_line = re.sub(r"\s+", " ", cleaned_line)
         cleaned_lines.append(cleaned_line)
     return cleaned_lines
 

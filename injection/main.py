@@ -10,10 +10,12 @@ import G_vdb_create
 
 
 if __name__ == "__main__":
-    
-    print("Starting the 'Insurance Policy\
-          Chatbot' injection pipeline...\n")
-    
+
+    print(
+        "Starting the 'Insurance Policy\
+          Chatbot' injection pipeline...\n"
+    )
+
     A_download_pdfs.main()
     time.sleep(0.05)
     B_feature_select.main()
@@ -27,5 +29,5 @@ if __name__ == "__main__":
     F_final_feature.main()
     time.sleep(0.05)
     G_vdb_create.main()
-    
+
     print("\nInjection pipeline finished!")

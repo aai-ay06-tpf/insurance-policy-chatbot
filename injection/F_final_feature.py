@@ -1,18 +1,21 @@
 import pickle, os, re
 from utils.config import FEATURES_PATH
 from langchain_core.documents.base import Document
-from eda_tools.preprocess_stopwords import remove_stopwords, preprocess_non_printable_characters
+from eda_tools.preprocess_stopwords import (
+    remove_stopwords,
+    preprocess_non_printable_characters,
+)
 
 
 def main():
-    # Build the paths for the articles bin files 
-    simple_results = os.path.join(FEATURES_PATH, 'simple_files_extractions.pkl')
-    grouped_results = os.path.join(FEATURES_PATH, 'grouped_files_extractions.pkl')
+    # Build the paths for the articles bin files
+    simple_results = os.path.join(FEATURES_PATH, "simple_files_extractions.pkl")
+    grouped_results = os.path.join(FEATURES_PATH, "grouped_files_extractions.pkl")
 
     # Load the articles
-    with open(simple_results, 'rb') as f:
+    with open(simple_results, "rb") as f:
         simple_data = pickle.load(f)
-    with open(grouped_results, 'rb') as f:
+    with open(grouped_results, "rb") as f:
         grouped_data = pickle.load(f)
 
     # Gather all the information on a single list
@@ -22,22 +25,24 @@ def main():
     all_contents = [article[3] for policy in all_data for article in policy]
 
     # Remove '\n' and '\t' characters
-    all_contents = [re.sub(r'[\n\t]', ' ', content) for content in all_contents]
-        
-    #TODO: Chequear output
+    all_contents = [re.sub(r"[\n\t]", " ", content) for content in all_contents]
+
+    # TODO: Chequear output
     # content = re.sub(r"\\t", " ", content)
-    # content = re.sub(r"\s+", " ", content)    
-        
+    # content = re.sub(r"\s+", " ", content)
+
     # Remove extra spaces
-    all_contents = [re.sub(r'\s+', ' ', content) for content in all_contents]
+    all_contents = [re.sub(r"\s+", " ", content) for content in all_contents]
 
     # clean non printable chars
-    preprocessing = [preprocess_non_printable_characters(content) for content in all_contents]
+    preprocessing = [
+        preprocess_non_printable_characters(content) for content in all_contents
+    ]
 
     # clean stopwords
     features = remove_stopwords(preprocessing)
 
-    # build again the 
+    # build again the
     feature_contents = []
     ci = 0
 
@@ -52,7 +57,7 @@ def main():
 
             policy_header = article[0]
             article_title = article[2]
-            page_content = article_title + ' \n ' + features[ci]
+            page_content = article_title + " \n " + features[ci]
             ci += 1
 
             feature_contents.append(
@@ -62,12 +67,11 @@ def main():
                         "policy_file": policy_file + ".pdf",
                         "policy_name": policy_name,
                         "policy_header": policy_header,
-                        "article_title": article_title
-                    }
+                        "article_title": article_title,
+                    },
                 )
             )
 
     # Save the features
     with open(os.path.join(FEATURES_PATH, f"final_features.pkl"), "wb") as f:
         pickle.dump(feature_contents, f)
-        
