@@ -1,9 +1,8 @@
 import os
-import ast
-
-
+from ast import literal_eval
 import chainlit as cl
 from agent import create_agent
+
 
 
 
@@ -20,7 +19,7 @@ async def init():
     msg = cl.Message(content=f"Processing chat components…")
     await msg.send()
 
-    # Chain
+    # Agent
     agent = create_agent()
     cl.user_session.set("agent", agent)
 
@@ -35,38 +34,32 @@ async def main(message: cl.Message):
     # Get the user session
     agent = cl.user_session.get("agent")
 
-    if len(chat_history) != 0:
-        optmizar_el_prompt_del_user_con_el_chat_history = None
-    
     # Make the prediction
     result = agent.invoke({"input": message.content, "chat_history": chat_history})
     chat_history = _chat_history(result)
     answer = result.get("output")
-    tool = result["intermediate_steps"][0][0].tool
-    source = result["intermediate_steps"][0][1]
 
+    
     # # Embed the answer in a message with the sources metadata
-    # sources_found = []
-    # sources_elements = []
-    # if sources:
-    #     for source in sources:
-    #         try:
-    #             source_name = sources.metadata["source"]
-    #         except:
-    #             source_name = "<Unknown>"
-    #         content = source.page_content
-    #         sources_found.append(source_name)
-    #         sources_elements.append(cl.Text(
-    #             content=content,
-    #             name=source_name
-    #         ))
-    # if sources_found:
-    #     answer += f"\n\nSources: {', '.join(sources_found)}"
-    # else:
-    #     answer += "\n\nNo sources found."
+    source_links = []
+    source_elements = []
+    try:
+        for tool in result["intermediate_steps"]:
+            source_link = tool[0].tool + "_link"
+            source_links.append(source_link)
+            source_elements.append(
+                cl.Text(content=tool[1], name=source_link)
+            )
+    except:
+        raise Exception("Error al obtener las fuentes")
+
+
+    if source_links:
+        answer += f"\n\nSources: {', '.join(source_links)}"
+
 
     # Send a response back to the user
-    msg = cl.Message(content=answer)#, elements=sources)
+    msg = cl.Message(content=answer, elements=source_elements)
     await msg.send()
 
 
