@@ -11,22 +11,25 @@ Activate the virtual environment by running:
 Install the required packages by running:
 `pip install -r injection/requirements.txt`.
 
-### Building and running the application
+### Build and run the Qdrant service
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+When you're ready, start the vector database by running:
+`docker compose up qdrant -d`.
 
 
-### Create the vector database
+### Create the vector database collections
 
-To create the vector database, run the following files from the `injection` directory:
-1. `python A_download_pdfs.py`
-2. `python B_feature_select.py`
-3. `python C_grouped_feature_select.py`
-4. `python D_vdb_create.py`
-5. `python feature_content_extraction.py`
-6. `python feature_content.py`
-7. `python vdb_create.py`
+First you have to create a `.env` file inside the injection directory. Follow the `raw_env.txt` file guide.
+After creating the `injection/.env` file you can load the document/vectors collections, run the following files from the `injection` directory:
+
+1. `cd injection`
+2. `python A_download_pdfs.py`
+3. `python B_feature_select.py`
+4. `python C_grouped_feature_select.py`
+5. `python D_vdb_create.py`
+6. `python E_feature_content_extraction.py`
+7. `python F_final_feature.py`
+8. `python G_vdb_create.py`
 
 
 ### Verify the collection names are correctly set in the backend_ui
