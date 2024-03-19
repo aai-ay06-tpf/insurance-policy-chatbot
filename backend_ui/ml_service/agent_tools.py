@@ -37,7 +37,7 @@ def init_feature_tool():
  
 def final_feature_tool():
     search_type = "mmr"
-    search_kwargs = {"k": 3, "lambda_mult": 0.25}
+    search_kwargs = {"k": 2, "lambda_mult": 0.25}# ACA REDUCIMOS EL BIAS
     
     embedding_name = "openai_embeddings"
     collection_name = "pdf_final_feature_openai_embeddings"
