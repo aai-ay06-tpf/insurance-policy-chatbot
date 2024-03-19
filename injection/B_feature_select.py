@@ -173,7 +173,7 @@ def create_feature_article(batch_files: list, func: Callable) -> list:
     return features
 
 
-if __name__ == "__main__":
+def main():
 
     pdf_files = os.listdir(DOWNLOAD_PATH)
 

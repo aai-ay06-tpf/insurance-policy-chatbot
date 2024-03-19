@@ -25,7 +25,7 @@ def create_vector_db(
     Returns:
     None
     """
-
+    # TODO: verificar que el servicio esté up and running
     # TODO: unit test: verificar que los chunks sean documentos de langchain
     # TODO: unit test: verificar que los chunks tengan longitudes similares
 
@@ -45,11 +45,10 @@ def create_vector_db(
         print(e)
         print()
         print(f"Error creating vector database for {collection_prefix}")
-        print("check if the vector database is already created.\n")
         return None
 
 
-if __name__ == "__main__":
+def main():
 
     # DEFINE DE EMBEDDING MODEL
     embedding_label = "openai_embeddings"

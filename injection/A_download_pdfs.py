@@ -19,7 +19,7 @@ def download_data():
             print(f"Download {key} as {file_name}")
 
 
-if __name__ == "__main__":
+def main():
     try:
         download_data()
         print("Done!")

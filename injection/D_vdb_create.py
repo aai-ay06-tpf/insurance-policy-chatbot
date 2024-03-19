@@ -25,7 +25,7 @@ def create_vector_db(
     Returns:
     None
     """
-
+    # TODO: verificar que el contenedor con el servicio de Qdrant esté activo (ping)
     # TODO: unit test: verificar que los chunks sean documentos de langchain
     # TODO: unit test: verificar que los chunks tengan longitudes similares
 
@@ -50,7 +50,7 @@ def create_vector_db(
         return None
 
 
-if __name__ == "__main__":
+def main():
 
     # DEFINE DE EMBEDDING MODEL
     embedding_label = "openai_embeddings"
@@ -80,6 +80,10 @@ if __name__ == "__main__":
 
     merge_1 = list(zip(feature_files, feature_articles))
     merge_2 = list(zip(grouped_feature_files, grouped_feature_articles))
+    
+    # Should we?
+    # final_feature_file = feature_files + feature_articles
+    # final_feature_article = grouped_feature_files + grouped_feature_articles
 
     init_feature = []
     for pdf in merge_1:
@@ -92,7 +96,7 @@ if __name__ == "__main__":
 
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
-        chunks=grouped_feature_files,
+        chunks=init_feature,# it was on grouped_feature_files
         embedding_label=embedding_label,
         collection_prefix="pdf_init_feature"
     )

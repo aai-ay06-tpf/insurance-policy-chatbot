@@ -327,7 +327,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
     return feature_files, feature_articles
 
 
-if __name__ == "__main__":
+def main():
 
     pdf_files = os.listdir(DOWNLOAD_PATH)
 
