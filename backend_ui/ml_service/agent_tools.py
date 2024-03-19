@@ -96,7 +96,7 @@ def retriever_tool_constitucion_chile():
 
     web_tool = create_retriever_tool(
         retriever=web_retriever,
-        description="Busca y devuelve extractos de los codigos de ley de la constitucion de Chile.",
+        description="Constitucion de Chile. Codigo de comercio, Compañias de seguros, Protocolo de seguridad sanitaria, Codigo sanitario, Codigo penal.",
         name="webscrapper_codigo_chile",
     )
     return web_tool
