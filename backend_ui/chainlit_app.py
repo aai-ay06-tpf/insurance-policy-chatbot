@@ -34,11 +34,23 @@ async def main(message: cl.Message):
     # Get the user session
     agent = cl.user_session.get("agent")
 
-    # Make the prediction
-    result = agent.invoke({"input": message.content, "chat_history": chat_history})
-    chat_history = _chat_history(result)
-    answer = result.get("output")
+    # Set up the streaming callback
+    cb = cl.AsyncLangchainCallbackHandler(
+        stream_final_answer=True
+    )
+    cb.answer_reached = True
+    
+    config = {
+        "callbacks": [cb]
+    }
 
+    # Make the prediction
+    result = await agent.ainvoke(
+        {"input": message.content, "chat_history": chat_history},
+        config=config
+    )
+    chat_history = _chat_history(result)
+    # answer = result.get("output")
     
     # # Embed the answer in a message with the sources metadata
     source_links = []
@@ -55,7 +67,9 @@ async def main(message: cl.Message):
 
 
     if source_links:
-        answer += f"\n\nSources: {', '.join(source_links)}"
+        answer = f"\n\nSources: {', '.join(source_links)}"
+    else:
+        answer = "\n\nNo sources found."
 
 
     # Send a response back to the user
@@ -63,6 +77,6 @@ async def main(message: cl.Message):
     await msg.send()
 
 
-# `cd frontend`
+# `cd backend_ui`
 # `chainlit run chainlit_app.py -w`
 # The -w flag tells Chainlit to enable auto-reloading, so you don’t need to restart the server every time you make changes to your application
