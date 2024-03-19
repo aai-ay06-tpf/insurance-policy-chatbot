@@ -97,19 +97,6 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
     articles = [", ".join(element).lower() for element in [remove_pattern_from_lines(
         extraction, pattern) for extraction, (_, pattern) in zip(extractions, batch_files)]]
 
-    # texts = [extract_text(file) for file, _ in batch_files]
-    # policy_headers = [text[:text.find(extractions[i][0])].replace("\n", " ") for i, text in enumerate(texts)]
-    # cleaned_policy_headers = []
-    # for header in policy_headers:
-    #     new_header = []
-    #     # use `re` for removing doble spaces
-    #     header = re.sub(r'\s+', ' ', header)
-    #     # Tokenize the header and keep only the uppercase words
-    #     for word in header.split(" "):
-    #         if word.isupper() and word.isalpha():
-    #             new_header.append(word)
-    #     cleaned_policy_headers.append(" ".join(new_header))
-
     policy_headers = obtain_policy_headers(batch_files, extractions)
 
     features = ["```{'poliza': '" + 
@@ -127,9 +114,6 @@ def create_feature_file(batch_files: list, func: Callable) -> list:
 
 def create_feature_article(batch_files: list, func: Callable) -> list:
     """
-
-    TODO: REVIEW THIS DOCS
-
     Create list of langchain Documents in which each document is a representation of all the articles in the policy
     with the corresponding preprocessing and metadata.
 
@@ -196,7 +180,11 @@ if __name__ == "__main__":
     patterns = ["^ART.CULO\s(?:N.\s)?\d+.:?"]
 
     # Obtain the features data
-    file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
+    # For manual creation of the file_batch use this line:
+    # file_batch = create_file_batch(pdf_files, extract_patterns, *patterns)
+    # else:
+    with open("B_default_file_batch.pkl", "rb") as f:
+        file_batch = pickle.load(f)
 
     # First Feature: Extracting the article titles and policy header
     feature_files = create_feature_file(file_batch, extract_patterns)

@@ -331,12 +331,19 @@ if __name__ == "__main__":
 
     pdf_files = os.listdir(DOWNLOAD_PATH)
 
+    # WARNING: This patterns must have 1 grouped element and the group must be only numbers
+    # use (?: ) -> for non-capturing groups
+    # (\d+) -> for capturing numered groups
     patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?"]
-    # patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?", "^\s?(?:ART|Art).(?:CULO|culo)\s(?:N.\s)?(\d)+(?:.|:)+$"]
+    # patterns = ["^ART.CULO\s(?:N.\s)?(\d+).:?", "^\s?(?:Art).(?:culo)\s(?:N.\s)?(\d)+(?:.|:)+$"]
 
     # Obtain the features data
-    file_batch = create_file_batch(
-        pdf_files, extract_grouped_patterns, *patterns)
+    # For manual creation of the file_batch use this line:
+    # file_batch = create_file_batch(
+    #     pdf_files, extract_grouped_patterns, *patterns)
+    # else:
+    with open("C_default_file_batch.pkl", "rb") as f:
+        file_batch = pickle.load(f)
 
     # Features: Both file and articles
     feature_files, feature_articles = create_grouped_feature(
