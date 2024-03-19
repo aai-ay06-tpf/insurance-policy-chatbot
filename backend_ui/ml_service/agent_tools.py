@@ -1,3 +1,5 @@
+from functools import wraps
+
 from langchain.tools.retriever import create_retriever_tool
 from langchain_community.utilities.serpapi import SerpAPIWrapper
 from langchain.agents import Tool
@@ -14,7 +16,7 @@ from ml_service.qdrant_vectorstore.vectorstore_funcs import (
 # Retriever params
 def init_feature_tool():
     search_type = "mmr"
-    search_kwargs = {"k": 3, "lambda_mult": 0.25}
+    search_kwargs = {"k": 5, "lambda_mult": 0.25}
     
     embedding_name = "openai_embeddings"
     collection_name = "pdf_init_feature_openai_embeddings"
@@ -37,7 +39,7 @@ def init_feature_tool():
  
 def final_feature_tool():
     search_type = "mmr"
-    search_kwargs = {"k": 2, "lambda_mult": 0.25}# ACA REDUCIMOS EL BIAS
+    search_kwargs = {"k": 2, "lambda_mult": 0.25}
     
     embedding_name = "openai_embeddings"
     collection_name = "pdf_final_feature_openai_embeddings"
@@ -59,7 +61,14 @@ def final_feature_tool():
 
  
 # SERAPI TOOL
-def news_search_tool():
+
+def to_string(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return str(func(*args, **kwargs))
+    return wrapper
+
+def web_news_tool():
     params = {
         "engine": "google",
         "gl": "cl",
@@ -70,11 +79,17 @@ def news_search_tool():
     search = SerpAPIWrapper(
         params=params, serpapi_api_key='e03fb949db7815588cf61f04a2e9a88ba4698abc82d876ac6428c3728978f95e')
 
+    # Create the function for the tool
+    @to_string
+    def dfunc(*args, **kwargs):
+        return search.run(*args, **kwargs)
+    
     repl_tool = Tool(
-        name="news_search",
-        description="Busca noticias web en castellano en Chile sobre polizas de seguro para la salud. La respuesta debe ser una noticia sobre pólizas de seguro en Chile. Si no hay noticias, la respuesta debe ser 'No hay noticias disponibles'.",
-        func=search.run,
+        name="web_news",
+        description="Noticias y novedades en internet y la web sobre empresas de seguros.",
+        func=dfunc,
     )
+
     
     return repl_tool
 

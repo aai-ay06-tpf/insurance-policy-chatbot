@@ -20,18 +20,23 @@ from langchain_core.prompts import (
 from langchain_core.runnables import Runnable, RunnableLambda, RunnableParallel
 from langchain_core.tools import BaseTool
 
-from ml_service.agent_tools import init_feature_tool, final_feature_tool, retriever_tool_constitucion_chile
+from ml_service.agent_tools import (
+    init_feature_tool,
+    final_feature_tool,
+    web_news_tool,
+    retriever_tool_constitucion_chile
+)
 from ml_service.tools.embeddings import Embeddings
 
 pdf_tool = final_feature_tool()
 init_tool = init_feature_tool()
-news_tool = []
+news_tool = web_news_tool()
 cl_constit_tool = retriever_tool_constitucion_chile()
 
 
 def create_agent():
     # TOOLS AND RETRIEVER TOOLS SET UP
-    ALL_TOOLS: List[BaseTool] = [init_tool, pdf_tool]
+    ALL_TOOLS: List[BaseTool] = [init_tool, pdf_tool, news_tool, cl_constit_tool]
 
     tool_docs = [
         Document(page_content=t.description, metadata={"index": i})
@@ -58,6 +63,7 @@ def create_agent():
     assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
     Usa la tool 'pdf_init_feature' para adquirir contexto básico de cada poliza o de cada articulo.
     La tool 'pdf_final_feature' devuelve 2 articulos completos, selecciona uno.
+    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."
     'constit_tool' informacion legal respecto a las leyes de Chile.
     """
 
