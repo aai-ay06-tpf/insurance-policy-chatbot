@@ -1,9 +1,5 @@
-import os
-from ast import literal_eval
 import chainlit as cl
 from agent import create_agent
-
-
 
 
 chat_history = []
@@ -50,7 +46,6 @@ async def main(message: cl.Message):
         config=config
     )
     chat_history = _chat_history(result)
-    # answer = result.get("output")
     
     # # Embed the answer in a message with the sources metadata
     source_links = []
@@ -79,4 +74,5 @@ async def main(message: cl.Message):
 
 # `cd backend_ui`
 # `chainlit run chainlit_app.py -w`
-# The -w flag tells Chainlit to enable auto-reloading, so you don’t need to restart the server every time you make changes to your application
+# The -w flag tells Chainlit to enable auto-reloading
+# so you don’t need to restart the server every time you make changes to your application
