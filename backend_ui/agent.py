@@ -25,6 +25,8 @@ from ml_service.tools.embeddings import Embeddings
 
 pdf_tool = final_feature_tool()
 init_tool = init_feature_tool()
+news_tool = []
+cl_constit_tool = []
 
 
 def create_agent():
@@ -45,7 +47,7 @@ def create_agent():
         location=":memory:",
         collection_name="agent_tools_documents",
     )
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 1})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
 
     def get_tools(query: str) -> List[Tool]:
         docs = retriever.get_relevant_documents(query)
@@ -55,7 +57,7 @@ def create_agent():
     # ERROR el prompt está después del retriever
     assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
     Usa la tool 'pdf_init_feature' para adquirir contexto básico de cada poliza o de cada articulo.
-    La tool 'pdf_final_feature' es la herramienta principal para buscar informacion completa sobre los articulos de polizas.
+    La tool 'pdf_final_feature' devuelve 2 articulos completos, selecciona uno.
     """
 
     prompt = ChatPromptTemplate.from_messages(
