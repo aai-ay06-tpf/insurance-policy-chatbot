@@ -33,14 +33,13 @@ from ml_service.tools.embeddings import Embeddings
 
 content_tool = content_feature_tool()
 pol_tool = policy_feature_tool()
-art_tool = article_feature_tool()
 news_tool = web_news_tool()
 cl_constit_tool = retriever_tool_constitucion_chile()
 
 
 def create_agent():
     # TOOLS AND RETRIEVER TOOLS SET UP
-    ALL_TOOLS: List[BaseTool] = [content_tool, pol_tool, art_tool, news_tool, cl_constit_tool]
+    ALL_TOOLS: List[BaseTool] = [content_tool, pol_tool, news_tool, cl_constit_tool]
 
     tool_docs = [
         Document(page_content=t.description, metadata={"index": i})
@@ -63,11 +62,12 @@ def create_agent():
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
 
     # PROMPT SET UP
-    assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
-    Usa la tool 'policy_feature' o 'article_feature' para adquirir contexto básico de cada poliza o de cada articulo.
-    La tool 'content_feature' devuelve 2 articulos completos, selecciona uno.
-    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."
-    'cl_constit_tool' informacion legal respecto a las leyes de Chile.
+    assistant_system_message = """Eres un asistente asesor para una compañia de seguros.\
+    Usa la tool 'policy_feature' para adquirir contexto básico de cada poliza.\
+    La tool 'content_feature' devuelve el articulo completo para desarrollar respuestas.\
+    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."\
+    'cl_constit_tool' informacion legal respecto a las leyes de Chile.\
+    Desarrollar la respuesta en formato bullet points.
     """
 
     prompt = ChatPromptTemplate.from_messages(
