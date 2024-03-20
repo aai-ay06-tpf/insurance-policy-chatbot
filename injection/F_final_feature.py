@@ -53,7 +53,9 @@ def main():
 
             policy_header = article[0]
             article_title = article[2]
-            page_content = article_title + " \n " + features[ci]
+            page_content = policy_name + " \n " + policy_header + " \n " +\
+                            article_title + " \n " + features[ci]
+            
             ci += 1
 
             feature_contents.append(

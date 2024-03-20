@@ -3,14 +3,10 @@ import time
 import pickle
 
 
-from qdrant_client import QdrantClient
-from qdrant_client.http.models import Distance, VectorParams
 from langchain_community.vectorstores.qdrant import Qdrant
 
 from ml_service.tools.embeddings import Embeddings
-from utils.config import QDRANT_HOST, QDRANT_PORT, QDRANT_URL
-
-client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
+from utils.config import FEATURES_PATH, QDRANT_URL
 
 
 start = time.time()
