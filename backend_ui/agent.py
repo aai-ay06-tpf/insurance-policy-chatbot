@@ -1,6 +1,6 @@
 import os
 from typing import Dict, List, Tuple
-
+from langchain.agents.agent import Agent
 from langchain.agents import (
     AgentExecutor,
     Tool,
@@ -61,7 +61,6 @@ def create_agent():
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
 
     # PROMPT SET UP
-    # ERROR el prompt está después del retriever
     assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
     Usa la tool 'pdf_init_feature' para adquirir contexto básico de cada poliza o de cada articulo.
     La tool 'pdf_final_feature' devuelve 2 articulos completos, selecciona uno.
@@ -81,7 +80,7 @@ def create_agent():
     # AGENT SET UP
 
     llm = ChatOpenAI(
-        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY")
+        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY"),
     )
 
     def llm_with_tools(input: Dict) -> Runnable:

@@ -16,7 +16,7 @@ from ml_service.qdrant_vectorstore.vectorstore_funcs import (
 # Retriever params
 def init_feature_tool():
     search_type = "mmr"
-    search_kwargs = {"k": 5, "lambda_mult": 0.25}
+    search_kwargs = {"k": 3, "lambda_mult": 0.25}
 
     embedding_name = "openai_embeddings"
     collection_name = "pdf_init_feature_openai_embeddings"
