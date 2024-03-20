@@ -14,7 +14,7 @@ from ml_service.qdrant_vectorstore.vectorstore_funcs import (
 
 # PDF TOOL RETRIEVER
 # Retriever params
-def file_feature_tool():
+def policy_feature_tool():
     search_type = "mmr"
     search_kwargs = {"k": 3, "lambda_mult": 0.25}
 
@@ -30,8 +30,8 @@ def file_feature_tool():
 
     init_tool = create_retriever_tool(
         retriever=pdf_retriever,
-        description="Esquema. Resumen de polizas de seguros. Lista de los articulos.",
-        name="pdf_init_feature",
+        description="Esquema. Estructura de polizas de seguros. Lista de los articulos.",
+        name="policy_feature",
     )
 
     return init_tool
@@ -42,7 +42,7 @@ def article_feature_tool():
     search_kwargs = {"k": 2, "lambda_mult": 0.25}
 
     embedding_name = "openai_embeddings"
-    collection_name = "pdf_final_feature_openai_embeddings"
+    collection_name = "pdf_art_feature_openai_embeddings"
 
     pdf_retriever = qdrant_retriever(
         embedding_name=embedding_name,
@@ -53,8 +53,8 @@ def article_feature_tool():
 
     pdf_tool = create_retriever_tool(
         retriever=pdf_retriever,
-        description="Esquema. Introduccion de los articulos. Encabezado de los articulos.",
-        name="pdf_final_feature",
+        description="Resumen. Introduccion de los articulos. Encabezado de los articulos.",
+        name="article_feature",
     )
 
     return pdf_tool
@@ -63,7 +63,7 @@ def article_feature_tool():
 
 def content_feature_tool():
     search_type = "mmr"
-    search_kwargs = {"k": 2, "lambda_mult": 0.25}
+    search_kwargs = {"k": 1}
 
     embedding_name = "openai_embeddings"
     collection_name = "pdf_final_feature_openai_embeddings"
@@ -77,8 +77,8 @@ def content_feature_tool():
 
     pdf_tool = create_retriever_tool(
         retriever=pdf_retriever,
-        description="Informacion completa de los articulos de las polizas de seguros.",
-        name="pdf_final_feature",
+        description="Desarrollar explicaciones con informacion completa. Contenido de los articulos de las polizas.",
+        name="content_feature",
     )
 
     return pdf_tool
@@ -141,6 +141,6 @@ def retriever_tool_constitucion_chile():
     web_tool = create_retriever_tool(
         retriever=web_retriever,
         description="Constitucion de Chile. Codigo de comercio, Compañias de seguros, Protocolo de seguridad sanitaria, Codigo sanitario, Codigo penal.",
-        name="constit_tool",
+        name="cl_constit_tool",
     )
     return web_tool
