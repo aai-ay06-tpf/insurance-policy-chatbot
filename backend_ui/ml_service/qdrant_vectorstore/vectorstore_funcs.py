@@ -4,6 +4,8 @@ import logging
 from dotenv import load_dotenv
 
 from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
+
 from langchain_community.vectorstores.qdrant import Qdrant
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain_community.chat_models.openai import ChatOpenAI
@@ -84,3 +86,16 @@ def obtain_llm_multiquery_retriever(
     logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 
     return retriever_from_llm
+
+
+def obtain_parent_document_retriever(
+    embedding_name: str,
+    collection_name: str,
+    search_type: str = "similarity",
+    search_kwargs: dict = {"k": 3},
+    embedding_dim: int = 3072
+):
+
+    #TODO
+
+    return

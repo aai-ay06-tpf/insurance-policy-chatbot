@@ -14,12 +14,12 @@ from ml_service.qdrant_vectorstore.vectorstore_funcs import (
 
 # PDF TOOL RETRIEVER
 # Retriever params
-def init_feature_tool():
+def file_feature_tool():
     search_type = "mmr"
     search_kwargs = {"k": 3, "lambda_mult": 0.25}
 
     embedding_name = "openai_embeddings"
-    collection_name = "pdf_init_feature_openai_embeddings"
+    collection_name = "pdf_pol_feature_openai_embeddings"
 
     pdf_retriever = qdrant_retriever(
         embedding_name=embedding_name,
@@ -30,14 +30,38 @@ def init_feature_tool():
 
     init_tool = create_retriever_tool(
         retriever=pdf_retriever,
-        description="Diccionario introduccion. Resumen de polizas de seguros. Encabezado de los articulos.",
+        description="Esquema. Resumen de polizas de seguros. Lista de los articulos.",
         name="pdf_init_feature",
     )
 
     return init_tool
 
 
-def final_feature_tool():
+def article_feature_tool():
+    search_type = "mmr"
+    search_kwargs = {"k": 2, "lambda_mult": 0.25}
+
+    embedding_name = "openai_embeddings"
+    collection_name = "pdf_final_feature_openai_embeddings"
+
+    pdf_retriever = qdrant_retriever(
+        embedding_name=embedding_name,
+        collection_name=collection_name,
+        search_type=search_type,
+        search_kwargs=search_kwargs,
+    )
+
+    pdf_tool = create_retriever_tool(
+        retriever=pdf_retriever,
+        description="Esquema. Introduccion de los articulos. Encabezado de los articulos.",
+        name="pdf_final_feature",
+    )
+
+    return pdf_tool
+
+# PDR CONTENT TOOL
+
+def content_feature_tool():
     search_type = "mmr"
     search_kwargs = {"k": 2, "lambda_mult": 0.25}
 
