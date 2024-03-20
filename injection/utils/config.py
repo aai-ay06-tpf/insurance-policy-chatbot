@@ -30,6 +30,9 @@ os.makedirs(DOWNLOAD_PATH, exist_ok=True)
 FEATURES_PATH = os.path.join(SERVICE_PATH, ".serialized_features")
 os.makedirs(FEATURES_PATH, exist_ok=True)
 
+QDRANT_HOST = env_config.get("qdrant", "QDRANT_HOST")
+QDRANT_PORT = env_config.get("qdrant", "QDRANT_PORT")
+
 # Qdrant Vector Database Path
 QDRANT_URL = env_config.get("qdrant", "QDRANT_URL")
 QDRANT_LOCAL_PATH = os.path.join(ROOT_PATH, "qdrant_collections")

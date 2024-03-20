@@ -110,10 +110,6 @@ def create_file_batch(files: list, func: Callable, *args: tuple) -> list:
     return batch_files[1:]
 
 
-def clean_article_title():
-    pass
-
-
 def create_grouped_feature(batch_files: list, func: Callable) -> list:
     """
     Create list of langchain Documents in which each document is a representation of all the articles in the policy
@@ -256,7 +252,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
         # file_content_hip = [": ".join(element)
         #                     for element in list(zip(headers, articles[i]))]
         page_content = [
-            "`{'poliza': '" + header.lower() + "', 'articulos': '" + article.lower()
+            "```{'poliza': '" + header.lower() + "', 'articulos': '" + article.lower()
             for article, header in zip(articles[i], headers)
         ]
 
@@ -267,7 +263,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 + policy_names[0]
                 + ".pdf', 'poliza_id': '"
                 + policy_names[j]
-                + "'}`"
+                + "'}```"
             )
 
             feature_files.append(
@@ -321,7 +317,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                 content = preprocess_non_printable_characters(content)
 
                 page_content = (
-                    "`{'poliza': '"
+                    "```{'poliza': '"
                     + headers[j].lower().strip()
                     + "', 'articulo': '"
                     + article_name
@@ -332,7 +328,7 @@ def create_grouped_feature(batch_files: list, func: Callable) -> list:
                     + ".pdf"
                     + "', 'poliza_id': '"
                     + policy_names[j]
-                    + "'}`"
+                    + "'}```"
                 )
 
                 features.append(
