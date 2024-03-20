@@ -27,10 +27,6 @@ def main():
     # Remove '\n' and '\t' characters
     all_contents = [re.sub(r"[\n\t]", " ", content) for content in all_contents]
 
-    # TODO: Chequear output
-    # content = re.sub(r"\\t", " ", content)
-    # content = re.sub(r"\s+", " ", content)
-
     # Remove extra spaces
     all_contents = [re.sub(r"\s+", " ", content) for content in all_contents]
 
