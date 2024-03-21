@@ -62,7 +62,7 @@ def article_feature_tool():
 # PDR CONTENT TOOL
 
 def content_feature_tool():
-    search_type = "mmr"
+    search_type = "similarity"
     search_kwargs = {"k": 1}
 
     embedding_name = "openai_embeddings"
