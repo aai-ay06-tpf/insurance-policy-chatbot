@@ -53,8 +53,16 @@ def main():
 
             policy_header = article[0]
             article_title = article[2]
+            
+            article_title_clean = []
+            for char in article_title:
+                if char.isalnum() or char.isspace():
+                    article_title_clean.append(char)
+                    
+            article_title_clean = "".join(article_title_clean)
+            
             page_content = policy_name + " \n " + policy_header + " \n " +\
-                            article_title + " \n " + features[ci]
+                            article_title_clean + " \n " + features[ci]
             
             ci += 1
 
