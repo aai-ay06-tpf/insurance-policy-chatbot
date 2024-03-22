@@ -1,0 +1,155 @@
+{
+    "components": {
+        "atoms": {
+            "buttons": {
+                "userButton": {
+                    "menu": {
+                        "settings": "Configuración",
+                        "settingsKey": "C",
+                        "APIKeys": "Claves API",
+                        "logout": "Salir"
+                    }
+                }
+            }
+        },
+        "molecules": {
+            "newChatButton": {
+                "newChat": "Nueva conversación"	
+            },
+            "tasklist": {
+                "TaskList": {
+                    "title": "\ud83d\uddd2\ufe0f Tareas",
+                    "loading": "Cargando...",
+                    "error": "Ocurrió un error"
+                }
+            },
+            "attachments": {
+                "cancelUpload": "Cancelar carga",
+                "removeAttachment": "Quitar adjunto"
+            },
+            "newChatDialog": {
+                "createNewChat": "¿Crear una nueva conversación?",
+                "clearChat": "Limpiar la conversación actual y crear una nueva.",
+                "cancel": "Cancelar",
+                "confirm": "Confirmar"
+            },
+            "settingsModal": {
+                "expandMessages": "Expandir Mensajes",
+                "hideChainOfThought": "Ocultar cadena",
+                "darkMode": "Modo Oscuro"
+            }
+        },
+        "organisms": {
+            "chat": {
+                "history": {
+                    "index": {
+                        "lastInputs": "Última entrada",
+                        "noInputs": "...",
+                        "loading": "Cargando..."
+                    }
+                },
+                "inputBox": {
+                    "input": {
+                        "placeholder": "Escriba su mensaje aquí..."
+                    },
+                    "speechButton": {
+                        "start": "Comenzar a grabar",
+                        "stop": "Detener grabación"
+                    },
+                    "SubmitButton": {
+                        "sendMessage": "Enviar mensaje",
+                        "stopTask": "Detener tarea"
+                    },
+                    "UploadButton": {
+                        "attachFiles": "Adjuntar archivos"
+                    },
+                    "waterMark": {
+                        "text": "Hecho con"
+                    }
+                },
+                "Messages": {
+                    "index": {
+                        "running": "Corriendo",
+                        "executedSuccessfully": "ejecutado exitosamente",
+                        "failed": "ha fallado",
+                        "feedbackUpdated": "Feedback actualizado",
+                        "updating": "Actualizando"
+                    }
+                },
+                "dropScreen": {
+                    "dropYourFilesHere": "Deje sus archivos aquí"
+                },
+                "index": {
+                    "failedToUpload": "No se pudo cargar",
+                    "cancelledUploadOf": "Carga cancelada de",
+                    "couldNotReachServer": "No se pudo llegar al servidor",
+                    "continuingChat": "Continuando el chat anterior"
+                },
+                "settings": {
+                    "settingsPanel": "Configuración",
+                    "reset": "Resetear",
+                    "cancel": "Cancelar",
+                    "confirm": "Confirmar"
+                }
+            },
+            "threadHistory": {
+                "sidebar": {
+                    "filters": {
+                        "FeedbackSelect": {
+                            "feedbackAll": "Feedback: Todo",
+                            "feedbackPositive": "Feedback: Positivo",
+                            "feedbackNegative": "Feedback: Negativo"
+                        },
+                        "SearchBar": {
+                            "search": "Buscar"
+                        }
+                    },
+                    "DeleteThreadButton": {
+                        "confirmMessage": "Esto eliminará el hilo, así como sus mensajes y elementos.",
+                        "cancel": "Cancelar",
+                        "confirm": "Confirmar",
+                        "deletingChat": "Eliminando chat",
+                        "chatDeleted": "Chat eliminado"
+                    },
+                    "index": {
+                        "pastChats": "Chats anteriores"
+                    },
+                    "ThreadList": {
+                        "empty": "Vacío..."
+                    },
+                    "TriggerButton": {
+                        "closeSidebar": "Cerrar sidebar",
+                        "openSidebar": "Abrir sidebar"
+                    }
+                },
+                "Thread": {
+                    "backToChat": "Volver al chat",
+                    "chatCreatedOn": "Chat creado el"
+                }
+            },
+            "header": {
+                "chat": "Chat",
+                "readme": "Léeme"
+            }
+        }
+    },
+    "hooks": {
+        "useLLMProviders": {
+            "failedToFetchProviders": "No se pudieron recuperar los proveedores:"
+        }
+    },
+    "pages": {
+        "Design": {},
+        "Env": {
+            "savedSuccessfully": "Guardado exitosamente",
+            "requiredApiKeys": "Claves API requeridas",
+            "requiredApiKeysInfo": "Para utilizar esta aplicación, se requieren las siguientes claves API. Las claves se almacenan en el almacenamiento local de su dispositivo.."
+        },
+        "Page": {
+            "notPartOfProject": "No ere parte del proyecto."
+        },
+        "ResumeButton": {
+            "resumeChat": "Reanudar el chat"
+        }
+    }
+}
