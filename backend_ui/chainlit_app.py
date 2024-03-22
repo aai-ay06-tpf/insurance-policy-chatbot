@@ -14,14 +14,14 @@ def _chat_history(result):
 @cl.on_chat_start
 async def init():
 
-    msg = cl.Message(content=f"Processing chat components…")
+    msg = cl.Message(content=f"Procesando los componentes del chat…")
     await msg.send()
 
     # Agent
     agent = create_agent()
     cl.user_session.set("agent", agent)
 
-    msg.content = f"Chat loaded. You can now ask questions!"
+    msg.content = f"Chat cargado. Ahora puede hacer preguntas!"
     await msg.update()
 
 
