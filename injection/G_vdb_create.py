@@ -25,7 +25,7 @@ def create_vector_db(
     Returns:
     None
     """
-
+    # TODO: verificar que el servicio esté up and running
     # TODO: unit test: verificar que los chunks sean documentos de langchain
     # TODO: unit test: verificar que los chunks tengan longitudes similares
 
@@ -39,17 +39,16 @@ def create_vector_db(
             embedding=embedding,
             url=QDRANT_URL,
             prefer_grpc=True,
-            collection_name=f"{collection_prefix}_{emb.get_current()}"
+            collection_name=f"{collection_prefix}_{emb.get_current()}",
         )
     except Exception as e:
         print(e)
         print()
         print(f"Error creating vector database for {collection_prefix}")
-        print("check if the vector database is already created.\n")
         return None
 
 
-if __name__ == "__main__":
+def main():
 
     # DEFINE DE EMBEDDING MODEL
     embedding_label = "openai_embeddings"
@@ -60,12 +59,11 @@ if __name__ == "__main__":
     with open(final_features_path, "rb") as file:
         final_features = pickle.load(file)
 
-
     # CREATE VECTOR DATABASE - FEATURE FILES
     create_vector_db(
         chunks=final_features,
         embedding_label=embedding_label,
-        collection_prefix="pdf_final_feature"
+        collection_prefix="pdf_final_feature",
     )
 
     end = time.time()

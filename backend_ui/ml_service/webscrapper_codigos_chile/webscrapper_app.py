@@ -1,9 +1,10 @@
-
 from concurrent.futures import ThreadPoolExecutor
 from copy import copy
 
 from ml_service.webscrapper_codigos_chile import web_documents, web_vectorstore
-from ml_service.webscrapper_codigos_chile.web_parent_document_retriever import obtain_parentdocument_retriever
+from ml_service.webscrapper_codigos_chile.web_parent_document_retriever import (
+    obtain_parentdocument_retriever,
+)
 
 from ml_service.tools.retrievers_validation import validate_search_kwargs
 
@@ -23,11 +24,10 @@ def obtain_docs(searchs):
     return all_docs
 
 
-
 # For executing 'obtain_docs' only once
 def obtain_docs_executed():
     # check the global variables and see if 'all_docs' exists:
-    if 'all_docs' in globals().keys():
+    if "all_docs" in globals().keys():
         return True
     return False
 
@@ -62,7 +62,7 @@ def qdrant_retriever(searchs, search_type="similarity", kwargs=None):
 
 def parent_document_retriever(searchs):
     global all_docs
-    
+
     if not obtain_docs_executed():
         all_docs = obtain_docs(searchs)
     else:

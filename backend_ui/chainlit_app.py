@@ -1,13 +1,10 @@
-import os
-import ast
-
-
 import chainlit as cl
 from agent import create_agent
 
 
-
 chat_history = []
+
+
 def _chat_history(result):
     global chat_history
     chat_history.extend([(result["input"], result["output"])])
@@ -20,7 +17,7 @@ async def init():
     msg = cl.Message(content=f"Processing chat components…")
     await msg.send()
 
-    # Chain
+    # Agent
     agent = create_agent()
     cl.user_session.set("agent", agent)
 
@@ -31,45 +28,44 @@ async def init():
 @cl.on_message
 async def main(message: cl.Message):
     global chat_history
-    
+
     # Get the user session
     agent = cl.user_session.get("agent")
 
-    if len(chat_history) != 0:
-        optmizar_el_prompt_del_user_con_el_chat_history = None
-    
+    # Set up the streaming callback
+    cb = cl.AsyncLangchainCallbackHandler(stream_final_answer=True)
+    cb.answer_reached = True
+
+    config = {"callbacks": [cb]}
+
     # Make the prediction
-    result = agent.invoke({"input": message.content, "chat_history": chat_history})
+    result = await agent.ainvoke(
+        {"input": message.content, "chat_history": chat_history}, config=config
+    )
     chat_history = _chat_history(result)
-    answer = result.get("output")
-    tool = result["intermediate_steps"][0][0].tool
-    source = result["intermediate_steps"][0][1]
 
     # # Embed the answer in a message with the sources metadata
-    # sources_found = []
-    # sources_elements = []
-    # if sources:
-    #     for source in sources:
-    #         try:
-    #             source_name = sources.metadata["source"]
-    #         except:
-    #             source_name = "<Unknown>"
-    #         content = source.page_content
-    #         sources_found.append(source_name)
-    #         sources_elements.append(cl.Text(
-    #             content=content,
-    #             name=source_name
-    #         ))
-    # if sources_found:
-    #     answer += f"\n\nSources: {', '.join(sources_found)}"
-    # else:
-    #     answer += "\n\nNo sources found."
+    source_links = []
+    source_elements = []
+    try:
+        for tool in result["intermediate_steps"]:
+            source_link = tool[0].tool + "_link"
+            source_links.append(source_link)
+            source_elements.append(cl.Text(content=tool[1], name=source_link))
+    except:
+        raise Exception("Error al obtener las fuentes")
+
+    if source_links:
+        answer = f"\n\nSources: {', '.join(source_links)}"
+    else:
+        answer = "\n\nNo sources found."
 
     # Send a response back to the user
-    msg = cl.Message(content=answer)#, elements=sources)
+    msg = cl.Message(content=answer, elements=source_elements)
     await msg.send()
 
 
-# `cd frontend`
+# `cd backend_ui`
 # `chainlit run chainlit_app.py -w`
-# The -w flag tells Chainlit to enable auto-reloading, so you don’t need to restart the server every time you make changes to your application
+# The -w flag tells Chainlit to enable auto-reloading
+# so you don’t need to restart the server every time you make changes to your application

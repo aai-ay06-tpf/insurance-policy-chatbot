@@ -17,7 +17,7 @@ load_dotenv()
 
 def obtain_vectorstore_from_client(
     embedding_name: str = "openai_embeddings",
-    collection_name: str = "pdf_init_feature_openai_embeddings"
+    collection_name: str = "pdf_init_feature_openai_embeddings",
 ) -> Qdrant:
 
     emb = Embeddings()
@@ -28,8 +28,12 @@ def obtain_vectorstore_from_client(
     return qdrant
 
 
-def qdrant_retriever(embedding_name: str, collection_name: str, search_type: str = "mmr",
-    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25}):
+def qdrant_retriever(
+    embedding_name: str,
+    collection_name: str,
+    search_type: str = "mmr",
+    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25},
+):
     """
     Params:
         - search_type: Can be "similarity" (default), "mmr", or "similarity_score_threshold".
@@ -41,13 +45,13 @@ def qdrant_retriever(embedding_name: str, collection_name: str, search_type: str
                 - filter: A dictionary with the fields and values to filter the documents metadata.
     """
 
-    vectorstore = obtain_vectorstore_from_client(embedding_name,collection_name)
+    vectorstore = obtain_vectorstore_from_client(embedding_name, collection_name)
 
     if search_kwargs:
         search_kwargs = validate_search_kwargs(search_kwargs)
         return vectorstore.as_retriever(
-            search_type=search_type,
-            search_kwargs=search_kwargs)
+            search_type=search_type, search_kwargs=search_kwargs
+        )
 
     return vectorstore.as_retriever(search_type=search_type)
 
@@ -56,13 +60,12 @@ def obtain_llm_multiquery_retriever(
     embedding_name: str,
     collection_name: str,
     search_type: str = "mmr",
-    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25}
+    search_kwargs: dict = {"k": 3, "lambda_mult": 0.25},
 ) -> MultiQueryRetriever:
 
     # load it into Qdrant
     db = obtain_vectorstore_from_client(
-        embedding_name=embedding_name,
-        collection_name=collection_name
+        embedding_name=embedding_name, collection_name=collection_name
     )
 
     # set the LLM for multiquery
@@ -72,13 +75,12 @@ def obtain_llm_multiquery_retriever(
     search_kwargs = validate_search_kwargs(search_kwargs)
 
     retriever_from_llm = MultiQueryRetriever.from_llm(
-        retriever=db.as_retriever(
-            search_type=search_type, search_kwargs=search_kwargs),
-        llm=llm)
+        retriever=db.as_retriever(search_type=search_type, search_kwargs=search_kwargs),
+        llm=llm,
+    )
 
     # Set logging for the queries
     logging.basicConfig()
-    logging.getLogger(
-        "langchain.retrievers.multi_query").setLevel(logging.INFO)
+    logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 
     return retriever_from_llm
