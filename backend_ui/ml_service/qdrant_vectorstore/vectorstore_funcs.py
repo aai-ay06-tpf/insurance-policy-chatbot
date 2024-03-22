@@ -4,9 +4,19 @@ import logging
 from dotenv import load_dotenv
 
 from qdrant_client import QdrantClient
+from qdrant_client.http.models import Distance, VectorParams
+from langchain.retrievers import ParentDocumentRetriever
+from langchain.storage import InMemoryStore
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 from langchain_community.vectorstores.qdrant import Qdrant
 from langchain.retrievers.multi_query import MultiQueryRetriever
 from langchain_community.chat_models.openai import ChatOpenAI
+
+from langchain.retrievers import ParentDocumentRetriever
+from langchain.storage import InMemoryStore
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
 
 from ml_service.tools.embeddings import Embeddings
 from ml_service.tools.retrievers_validation import validate_search_kwargs
@@ -16,8 +26,8 @@ load_dotenv()
 
 
 def obtain_vectorstore_from_client(
+    collection_name: str,
     embedding_name: str = "openai_embeddings",
-    collection_name: str = "pdf_init_feature_openai_embeddings",
 ) -> Qdrant:
 
     emb = Embeddings()
@@ -29,8 +39,8 @@ def obtain_vectorstore_from_client(
 
 
 def qdrant_retriever(
-    embedding_name: str,
     collection_name: str,
+    embedding_name: str,
     search_type: str = "mmr",
     search_kwargs: dict = {"k": 3, "lambda_mult": 0.25},
 ):
@@ -45,7 +55,7 @@ def qdrant_retriever(
                 - filter: A dictionary with the fields and values to filter the documents metadata.
     """
 
-    vectorstore = obtain_vectorstore_from_client(embedding_name, collection_name)
+    vectorstore = obtain_vectorstore_from_client(collection_name, embedding_name)
 
     if search_kwargs:
         search_kwargs = validate_search_kwargs(search_kwargs)
@@ -57,8 +67,8 @@ def qdrant_retriever(
 
 
 def obtain_llm_multiquery_retriever(
-    embedding_name: str,
     collection_name: str,
+    embedding_name: str,
     search_type: str = "mmr",
     search_kwargs: dict = {"k": 3, "lambda_mult": 0.25},
 ) -> MultiQueryRetriever:
@@ -84,3 +94,5 @@ def obtain_llm_multiquery_retriever(
     logging.getLogger("langchain.retrievers.multi_query").setLevel(logging.INFO)
 
     return retriever_from_llm
+
+

@@ -2,10 +2,11 @@ import os
 import time
 import pickle
 
+
 from langchain_community.vectorstores.qdrant import Qdrant
 
 from ml_service.tools.embeddings import Embeddings
-from utils.config import QDRANT_URL, FEATURES_PATH
+from utils.config import FEATURES_PATH, QDRANT_URL
 
 
 start = time.time()

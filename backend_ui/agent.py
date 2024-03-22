@@ -1,6 +1,6 @@
 import os
 from typing import Dict, List, Tuple
-
+from langchain.agents.agent import Agent
 from langchain.agents import (
     AgentExecutor,
     Tool,
@@ -23,22 +23,23 @@ from langchain_core.runnables import Runnable, RunnableLambda, RunnableParallel
 from langchain_core.tools import BaseTool
 
 from ml_service.agent_tools import (
-    init_feature_tool,
-    final_feature_tool,
+    content_feature_tool,
+    policy_feature_tool,
+    article_feature_tool,
     web_news_tool,
     retriever_tool_constitucion_chile,
 )
 from ml_service.tools.embeddings import Embeddings
 
-pdf_tool = final_feature_tool()
-init_tool = init_feature_tool()
+content_tool = content_feature_tool()
+pol_tool = policy_feature_tool()
 news_tool = web_news_tool()
 cl_constit_tool = retriever_tool_constitucion_chile()
 
 
 def create_agent():
     # TOOLS AND RETRIEVER TOOLS SET UP
-    ALL_TOOLS: List[BaseTool] = [init_tool, pdf_tool, news_tool, cl_constit_tool]
+    ALL_TOOLS: List[BaseTool] = [content_tool, pol_tool, news_tool, cl_constit_tool]
 
     tool_docs = [
         Document(page_content=t.description, metadata={"index": i})
@@ -54,19 +55,19 @@ def create_agent():
         location=":memory:",
         collection_name="agent_tools_documents",
     )
-    retriever = vectorstore.as_retriever(search_kwargs={"k": 2})
+    retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 
     def get_tools(query: str) -> List[Tool]:
         docs = retriever.get_relevant_documents(query)
         return [ALL_TOOLS[d.metadata["index"]] for d in docs]
 
     # PROMPT SET UP
-    # ERROR el prompt está después del retriever
-    assistant_system_message = """Eres un asistente asesor para una compañia de seguros. \
-    Usa la tool 'pdf_init_feature' para adquirir contexto básico de cada poliza o de cada articulo.
-    La tool 'pdf_final_feature' devuelve 2 articulos completos, selecciona uno.
-    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."
-    'constit_tool' informacion legal respecto a las leyes de Chile.
+    assistant_system_message = """Eres un asistente asesor para una compañia de seguros.\
+    Usa la tool 'policy_feature' para adquirir contexto básico de cada poliza.\
+    La tool 'content_feature' devuelve el articulo completo para desarrollar respuestas.\
+    La tool 'web_news' devuelve noticias, filtrar por 'date' para que sean recientes, sino la respuesta debe ser 'No hay noticias disponibles'."\
+    'cl_constit_tool' informacion legal respecto a las leyes de Chile.\
+    Desarrollar la respuesta en formato bullet points.
     """
 
     prompt = ChatPromptTemplate.from_messages(
@@ -81,7 +82,7 @@ def create_agent():
     # AGENT SET UP
 
     llm = ChatOpenAI(
-        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY")
+        temperature=0.0, model="gpt-3.5-turbo-0125", api_key=os.getenv("OPENAI_API_KEY"),
     )
 
     def llm_with_tools(input: Dict) -> Runnable:

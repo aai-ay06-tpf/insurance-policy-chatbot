@@ -46,7 +46,6 @@ def create_vector_db(
         print(e)
         print()
         print(f"Error creating vector database for {collection_prefix}")
-        print("check if the vector database is already created.\n")
         return None
 
 
@@ -74,29 +73,26 @@ def main():
     with open(feature_articles_path, "rb") as file:
         grouped_feature_articles = pickle.load(file)
 
-    # MERGE THE FEATURES OBTAINED
 
-    merge_1 = list(zip(feature_files, feature_articles))
-    merge_2 = list(zip(grouped_feature_files, grouped_feature_articles))
+    final_feature_file = feature_files + grouped_feature_files
+    final_feature_article = feature_articles + grouped_feature_articles
+    final_feature_article = [element for lista in final_feature_article for element in lista]
+    
 
-    # Should we?
-    # final_feature_file = feature_files + feature_articles
-    # final_feature_article = grouped_feature_files + grouped_feature_articles
-
-    init_feature = []
-    for pdf in merge_1:
-        init_feature += [pdf[0]] + pdf[1]
-    for policy in merge_2:
-        init_feature += [policy[0]] + policy[1]
-
-    with open(os.path.join(FEATURES_PATH, "init_feature.pkl"), "wb") as file:
-        pickle.dump(init_feature, file)
-
-    # CREATE VECTOR DATABASE - FEATURE FILES
+    # CREATE VECTOR DATABASE - POLICY FEATURE
     create_vector_db(
-        chunks=init_feature,  # it was on grouped_feature_files
+        chunks=final_feature_file,
         embedding_label=embedding_label,
-        collection_prefix="pdf_init_feature",
+        collection_prefix="pdf_pol_feature",
+    )
+
+    time.sleep(0.05)
+
+    # CREATE VECTOR DATABASE - ARTICLE FEATURE
+    create_vector_db(
+        chunks=final_feature_article,
+        embedding_label=embedding_label,
+        collection_prefix="pdf_art_feature",
     )
 
     end = time.time()
